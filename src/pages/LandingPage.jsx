@@ -1,6 +1,21 @@
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "../firebase/config"; 
 
 function LandingPage() {
+  const [cupones, setCupones] = useState([]);
+
+  useEffect(() => {
+    const fetchCupones = async () => {
+      const querySnapshot = await getDocs(collection(db, "cupones"));
+      const cuponesData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      setCupones(cuponesData);
+    };
+
+    fetchCupones();
+  }, []);
+
   return (
     <div className="landing">
       <header>
@@ -14,16 +29,15 @@ function LandingPage() {
       <section>
         <h2>Ofertas destacadas</h2>
         <div className="cupones">
-          <div className="cupon">
-            <h3>50% en Pizza Hut</h3>
-            <p>Solo por tiempo limitado.</p>
-            <button>Comprar Cupón</button>
-          </div>
-          <div className="cupon">
-            <h3>2x1 en Starbucks</h3>
-            <p>Válido hasta el 30 de abril.</p>
-            <button>Comprar Cupón</button>
-          </div>
+          {cupones.map((cupon) => (
+            <div key={cupon.id} className="cupon">
+              <h3>{cupon.titulo}</h3>
+              <p>{cupon.descripcion}</p>
+              <Link to={`/cupon/${cupon.id}`}>
+                <button>Comprar Cupón</button>
+              </Link>
+            </div>
+          ))}
         </div>
       </section>
     </div>

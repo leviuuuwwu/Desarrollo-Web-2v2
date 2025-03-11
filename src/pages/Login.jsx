@@ -1,12 +1,21 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { auth, db } from "../firebase/config";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, setPersistence, browserSessionPersistence, signOut } from "firebase/auth";
+import { 
+  createUserWithEmailAndPassword, 
+  signInWithEmailAndPassword, 
+  setPersistence, 
+  browserSessionPersistence, 
+  signOut 
+} from "firebase/auth";
 import { doc, setDoc, getDoc } from "firebase/firestore";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [fullName, setFullName] = useState("");
+  const [phone, setPhone] = useState("");
   const [isRegistering, setIsRegistering] = useState(false);
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
@@ -21,38 +30,22 @@ function Login() {
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
       if (user) {
-        console.log("Usuario detectado:", user.uid);
-
         const userRef = doc(db, "users", user.uid);
         const userDoc = await getDoc(userRef);
 
         if (userDoc.exists()) {
           const userData = userDoc.data();
-          console.log("Datos obtenidos de Firestore:", userData);
-
-          if (!userData.role) {
-            console.warn("El usuario no tiene un rol definido en Firestore.");
-            return;
-          }
-
           setUser(userData);
 
-          // Redirigir si el usuario está autenticado
           if (userData.role === "admin") {
-            console.log("Redirigiendo a /admin");
             navigate("/admin");
           } else if (userData.role === "empresa") {
-            console.log("Redirigiendo a /empresa");
             navigate("/empresa");
           } else {
-            console.log("Redirigiendo a /cliente");
             navigate("/cliente");
           }
-        } else {
-          console.warn("El documento de usuario no existe en Firestore.");
         }
       } else {
-        console.log("No hay usuario autenticado.");
         setUser(null);
       }
     });
@@ -62,17 +55,24 @@ function Login() {
 
   const registerUser = async (e) => {
     e.preventDefault();
+
+    if (password !== confirmPassword) {
+      alert("Las contraseñas no coinciden");
+      return;
+    }
+
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
       await setDoc(doc(db, "users", user.uid), {
         email: user.email,
+        fullName,
+        phone,
         role: "cliente",
       });
 
-      console.log("Usuario registrado correctamente:", user);
-      navigate("/cliente"); // Redirigir después de registrarse
+      navigate("/cliente"); 
     } catch (error) {
       console.error("Error al registrar usuario:", error);
     }
@@ -89,9 +89,7 @@ function Login() {
 
       if (userDoc.exists()) {
         const userData = userDoc.data();
-        console.log("Inicio de sesión exitoso, datos del usuario:", userData);
 
-        // Redirigir según el rol
         if (userData.role === "admin") {
           navigate("/admin");
         } else if (userData.role === "empresa") {
@@ -99,8 +97,6 @@ function Login() {
         } else {
           navigate("/cliente");
         }
-      } else {
-        console.warn("No se encontró información del usuario en Firestore.");
       }
     } catch (error) {
       console.error("Error al iniciar sesión:", error);
@@ -108,35 +104,77 @@ function Login() {
   };
 
   return (
-    <div style={{ textAlign: "center", marginTop: "50px" }}>
-      <h1>{isRegistering ? "Regístrate" : "Inicia Sesión"}</h1>
-      <form onSubmit={isRegistering ? registerUser : signInUser} style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-        <input
-          type="email"
-          placeholder="Correo electrónico"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-          style={{ margin: "10px", padding: "8px" }}
-        />
-        <input
-          type="password"
-          placeholder="Contraseña"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-          style={{ margin: "10px", padding: "8px" }}
-        />
-        <button type="submit" style={{ margin: "10px", padding: "10px", cursor: "pointer" }}>
-          {isRegistering ? "Registrarse" : "Iniciar Sesión"}
-        </button>
-      </form>
-      <p>
-        {isRegistering ? "¿Ya tienes una cuenta?" : "¿No tienes cuenta?"}{" "}
-        <span onClick={() => setIsRegistering(!isRegistering)} style={{ color: "blue", cursor: "pointer" }}>
-          {isRegistering ? "Inicia sesión" : "Regístrate"}
-        </span>
-      </p>
+    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+      <div className="bg-white p-8 rounded-lg shadow-lg w-96">
+        <h1 className="text-2xl font-bold text-center mb-4">
+          {isRegistering ? "Regístrate" : "Inicia Sesión"}
+        </h1>
+        <form onSubmit={isRegistering ? registerUser : signInUser} className="space-y-4">
+          {isRegistering && (
+            <>
+              <input
+                type="text"
+                placeholder="Nombre Completo"
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
+                required
+                className="w-full p-2 border border-gray-300 rounded-lg"
+              />
+              <input
+                type="tel"
+                placeholder="Teléfono"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                required
+                className="w-full p-2 border border-gray-300 rounded-lg"
+              />
+            </>
+          )}
+
+          <input
+            type="email"
+            placeholder="Correo electrónico"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            className="w-full p-2 border border-gray-300 rounded-lg"
+          />
+          <input
+            type="password"
+            placeholder="Contraseña"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            className="w-full p-2 border border-gray-300 rounded-lg"
+          />
+          {isRegistering && (
+            <input
+              type="password"
+              placeholder="Confirmar Contraseña"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              required
+              className="w-full p-2 border border-gray-300 rounded-lg"
+            />
+          )}
+          <button 
+            type="submit" 
+            className="w-full bg-blue-600 text-white p-2 rounded-lg hover:bg-blue-700 transition"
+          >
+            {isRegistering ? "Registrarse" : "Iniciar Sesión"}
+          </button>
+        </form>
+
+        <p className="text-center mt-4">
+          {isRegistering ? "¿Ya tienes una cuenta?" : "¿No tienes cuenta?"}{" "}
+          <span 
+            onClick={() => setIsRegistering(!isRegistering)} 
+            className="text-blue-600 cursor-pointer hover:underline"
+          >
+            {isRegistering ? "Inicia sesión" : "Regístrate"}
+          </span>
+        </p>
+      </div>
     </div>
   );
 }
