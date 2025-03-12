@@ -19,7 +19,7 @@ function LandingPage() {
   return (
     <div className="landing">
       <header>
-        <h1>Bienvenido a CuponeraX</h1>
+        <h1>Bienvenido a CuponMania</h1>
         <p>Compra cupones con grandes descuentos en restaurantes, tiendas y más.</p>
         <Link to="/login">
           <button>Iniciar Sesión</button>
