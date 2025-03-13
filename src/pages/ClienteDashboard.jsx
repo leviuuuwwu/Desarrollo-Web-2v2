@@ -10,21 +10,21 @@ function ClienteDashboard() {
   useEffect(() => {
     const fetchCupones = async () => {
       try {
-        console.log("✅ Intentando conectar a Firestore...");
+        console.log("Intentando conectar a Firestore...");
         
         const cuponesRef = collection(db, "cupones");
         const querySnapshot = await getDocs(cuponesRef);
 
         if (querySnapshot.empty) {
-          console.warn("⚠️ No hay cupones en la base de datos.");
+          console.warn("No hay cupones en la base de datos.");
         } else {
-          console.log("🎉 Datos obtenidos de Firestore:", querySnapshot.docs.map(doc => doc.data()));
+          console.log("Datos obtenidos de Firestore:", querySnapshot.docs.map(doc => doc.data()));
         }
 
         const cuponesData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         setCupones(cuponesData);
       } catch (error) {
-        console.error("🔥 Error al obtener cupones:", error);
+        console.error("Error al obtener cupones:", error);
       } finally {
         setLoading(false);
       }
@@ -34,7 +34,7 @@ function ClienteDashboard() {
   }, []);
 
   useEffect(() => {
-    console.log("🔄 Estado actualizado: cupones =", cupones);
+    console.log("Estado actualizado: cupones =", cupones);
   }, [cupones]);
 
   if (loading) return <p>Cargando cupones...</p>;

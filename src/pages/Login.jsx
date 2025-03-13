@@ -106,7 +106,8 @@ function Login() {
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="bg-white p-8 rounded-lg shadow-lg w-96">
-        <h1 className="text-2xl font-bold text-center mb-4">
+        <img src="/Logo.png" alt="logo" className="w-28 pb-5 mx-auto block" />
+        <h1 className="text-2xl font-bold text-center mb-4 monse">
           {isRegistering ? "Regístrate" : "Inicia Sesión"}
         </h1>
         <form onSubmit={isRegistering ? registerUser : signInUser} className="space-y-4">
@@ -159,7 +160,7 @@ function Login() {
           )}
           <button 
             type="submit" 
-            className="w-full bg-blue-600 text-white p-2 rounded-lg hover:bg-blue-700 transition"
+            className="w-full bg-[#3C7499] text-white p-2 rounded-lg hover:bg-[#6da3c3] transition font-bold"
           >
             {isRegistering ? "Registrarse" : "Iniciar Sesión"}
           </button>
@@ -169,7 +170,7 @@ function Login() {
           {isRegistering ? "¿Ya tienes una cuenta?" : "¿No tienes cuenta?"}{" "}
           <span 
             onClick={() => setIsRegistering(!isRegistering)} 
-            className="text-blue-600 cursor-pointer hover:underline"
+            className="text-[#1d3557] font-bold cursor-pointer hover:underline"
           >
             {isRegistering ? "Inicia sesión" : "Regístrate"}
           </span>
