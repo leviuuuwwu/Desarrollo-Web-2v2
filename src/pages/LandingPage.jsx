@@ -18,11 +18,10 @@ function LandingPage() {
 
   return (
     <div className="landing">
-      <header>
-        <h1>Bienvenido a CuponMania</h1>
-        <p>Compra cupones con grandes descuentos en restaurantes, tiendas y más.</p>
+      <header className="bg-[#012E40] p-5">
+        <img src="CM-Logo(1).png" alt="logo" className="w-32"/>
         <Link to="/login">
-          <button>Iniciar Sesión</button>
+          <button className="text-white bg-[#3C7499] rounded font-bold px-4 py-2 hover:bg-[#6da3c3]">Iniciar Sesión</button>
         </Link>
       </header>
 
@@ -42,6 +41,6 @@ function LandingPage() {
       </section>
     </div>
   );
-}
+};
 
 export default LandingPage;
