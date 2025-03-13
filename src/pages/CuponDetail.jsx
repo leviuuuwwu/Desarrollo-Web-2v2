@@ -22,10 +22,10 @@ function CuponDetail() {
 
           setCupon({ id: cuponDoc.id, ...data, fechaLimiteUsar: fechaLimite });
         } else {
-          console.warn("⚠️ Cupón no encontrado.");
+          console.warn("Cupón no encontrado.");
         }
       } catch (error) {
-        console.error("🔥 Error cargando el cupón:", error);
+        console.error("Error cargando el cupón:", error);
       } finally {
         setLoading(false);
       }
