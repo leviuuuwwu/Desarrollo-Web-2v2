@@ -73,9 +73,12 @@ function ClienteDashboard() {
                   className="w-40 mb-3 mx-auto block" 
                   />
                 <p className="mb-2 text-gray-700">{cupon.descripcion}</p>
-                <p className="mb-2 font-semibold text-xl text-[#3c7499]">Precio Oferta: ${cupon.precioOferta}</p>
+                <div className="text-justify px-4">
+                  <p><strong>Precio Regular:</strong> ${cupon.precioRegular}</p>
+                  <p><strong>Precio Oferta:</strong> ${cupon.precioOferta}</p>
+                </div>
                 <Link to={`/cupon/${cupon.id}`}>
-                  <button className="bg-[#3C7499] text-white px-4 py-2 rounded-lg font-semibold hover:bg-[#6da3c3] transition hover:scale-103">Comprar Cupón</button>
+                  <button className="bg-[#3C7499] text-white px-4 py-2 mt-3 rounded-lg font-semibold hover:bg-[#6da3c3] transition hover:scale-103">Comprar Cupón</button>
                 </Link>
               </div>
             ))

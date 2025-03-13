@@ -56,7 +56,7 @@ function CuponDetail() {
           <h1 className="monse text-xl font-extrabold text-[#1d3557] mb-2 uppercase">{cupon.titulo}</h1>
           <img src={cupon.imagenURL} alt={cupon.titulo} width="100" className="w-40 mb-3 mx-auto block"/>
           <p className="mb-2 text-gray-700">{cupon.descripcion}</p>
-          <div className="text-justify">
+          <div className="text-justify px-4">
             <p><strong>Detalles:</strong> {cupon.detalles}</p>
             <p><strong>Precio Oferta:</strong> ${cupon.precioOferta}</p>
             <p><strong>Precio Regular:</strong> ${cupon.precioRegular}</p>
