@@ -18,10 +18,10 @@ function LandingPage() {
 
   return (
     <div className="landing bg-[#f5f5f5]">
-      <header className="w-full bg-[#012E40] fixed py-4 px-20 flex items-center justify-between ">
+      <header className="w-full bg-[#012E40] fixed py-4 px-20 flex items-center justify-between">
         <img src="/CM.png" alt="logo" className="w-60"/>
         <Link to="/login">
-          <button className="text-white bg-[#3C7499] rounded-lg font-bold px-4 py-2 hover:bg-[#6da3c3] transition">Iniciar Sesión</button>
+          <button className="text-white bg-[#3C7499] rounded-lg font-bold px-4 py-2 hover:bg-[#6da3c3] transition hover:scale-103">Iniciar Sesión</button>
         </Link>
       </header>
 
@@ -39,9 +39,16 @@ function LandingPage() {
               `}
               >
               <h3 className="text-xl font-extrabold text-[#1d3557] mb-2 uppercase">{cupon.titulo}</h3>
-              <p className="mb-4">{cupon.descripcion}</p>
+              <img 
+                src={cupon.imagenURL} 
+                alt={cupon.titulo} 
+                width="100" 
+                className="w-40 mb-3 mx-auto block"
+                />
+              <p className="mb-2 text-gray-700">{cupon.descripcion}</p>
+              <p className="mb-2 font-semibold text-xl text-[#3c7499]">Precio Oferta: ${cupon.precioOferta}</p>
               <Link to={`/cupon/${cupon.id}`}>
-                <button className="bg-[#3C7499] text-white px-4 py-2 rounded-lg font-semibold hover:bg-[#6da3c3] transition">Comprar Cupón</button>
+                <button className="bg-[#3C7499] text-white px-4 py-2 rounded-lg font-semibold hover:bg-[#6da3c3] transition hover:scale-103">Comprar Cupón</button>
               </Link>
             </div>
           ))}

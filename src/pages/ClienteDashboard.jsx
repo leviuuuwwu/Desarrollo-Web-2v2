@@ -40,29 +40,47 @@ function ClienteDashboard() {
   if (loading) return <p>Cargando cupones...</p>;
 
   return (
-    <div className="landing">
-      <header>
-        <h1>Bienvenido a CuponeraX</h1>
-        <p>Aprovecha los mejores descuentos en restaurantes, tiendas y más.</p>
+    <div className="landing bg-[#f5f5f5]">
+      <header className="w-full bg-[#012E40] fixed py-4 px-20 flex items-center justify-between">
+        <img src="/CM.png" alt="logo" className="w-60"/>
+        <div className="flex space-x-10">
+          <button>
+            <i className="fa-solid fa-ticket text-white text-3xl hover:scale-130 transition"></i>
+          </button>
+          <button>
+            <i className="fa-solid fa-user text-white text-3xl hover:scale-130 transition"></i>
+          </button>
+        </div>
       </header>
 
-      <section>
-        <h2>Ofertas destacadas</h2>
-        <div className="cupones">
+      <section className="pt-22 px-28">
+        <h2 className="text-2xl text-center monse font-semibold mb-3">Ofertas destacadas</h2>
+        <div className="cupones grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-10 rounded-lg place-items-center">
           {cupones.length > 0 ? (
             cupones.map((cupon) => (
-              <div key={cupon.id} className="cupon">
-                <h3>{cupon.titulo}</h3>
-                <p>{cupon.descripcion}</p>
-                <img src={cupon.imagenURL} alt={cupon.titulo} width="100" />
-                <p>Precio Oferta: ${cupon.precioOferta}</p>
+              <div 
+                key={cupon.id} 
+                className={`cupon bg-[#d9d9d9] rounded-lg shadow p-4 text-center max-w-xs mx-auto 
+                  ${cupones.length === 1 ? "col-span-1" : ""}
+                  ${cupones.length === 2 ? "md:col-span-2" : ""}
+                  ${cupones.length > 3 && (index % 3 === 0) ? "lg:col-span-3 justify-self-center" : ""}
+                `}>
+                <h3 className="text-xl font-extrabold text-[#1d3557] mb-2 uppercase">{cupon.titulo}</h3>
+                <img 
+                  src={cupon.imagenURL} 
+                  alt={cupon.titulo} 
+                  width="100" 
+                  className="w-40 mb-3 mx-auto block" 
+                  />
+                <p className="mb-2 text-gray-700">{cupon.descripcion}</p>
+                <p className="mb-2 font-semibold text-xl text-[#3c7499]">Precio Oferta: ${cupon.precioOferta}</p>
                 <Link to={`/cupon/${cupon.id}`}>
-                  <button>Comprar Cupón</button>
+                  <button className="bg-[#3C7499] text-white px-4 py-2 rounded-lg font-semibold hover:bg-[#6da3c3] transition hover:scale-103">Comprar Cupón</button>
                 </Link>
               </div>
             ))
           ) : (
-            <p>No hay cupones disponibles.</p>
+            <p className="text-center text-gray-500">No hay cupones disponibles.</p>
           )}
         </div>
       </section>

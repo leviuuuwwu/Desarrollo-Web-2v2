@@ -38,27 +38,70 @@ function CuponDetail() {
   if (!cupon) return <p>No se encontró el cupón.</p>;
 
   return (
-    <div className="compra-cupon">
-      <h1>{cupon.titulo}</h1>
-      <img src={cupon.imagenURL} alt={cupon.titulo} width="300" />
-      <p>{cupon.descripcion}</p>
-      <p><strong>Detalles:</strong> {cupon.detalles}</p>
-      <p><strong>Precio Oferta:</strong> ${cupon.precioOferta}</p>
-      <p><strong>Precio Regular:</strong> ${cupon.precioRegular}</p>
-      <p><strong>Fecha Límite de Uso:</strong> {cupon.fechaLimiteUsar}</p>
-      <p><strong>Cantidad Disponible:</strong> {cupon.cantidadDisp}</p>
-      <button onClick={() => setShowPaymentModal(true)}>Confirmar Compra</button>
+    <div className="compra-cupon bg-[#f5f5f5]">
+      <header className="w-full bg-[#012E40] fixed py-4 px-20 flex items-center justify-between">
+        <img src="/CM.png" alt="logo" className="w-60"/>
+        <div className="flex space-x-10">
+          <button>
+            <i className="fa-solid fa-ticket text-white text-3xl hover:scale-130 transition"></i>
+          </button>
+          <button>
+            <i className="fa-solid fa-user text-white text-3xl hover:scale-130 transition"></i>
+          </button>
+        </div>
+      </header>      
 
+      <section className="pt-28 px-28 flex justify-center">
+        <div className="bg-[#d9d9d9] rounded-lg shadow p-4 text-center">
+          <h1 className="monse text-xl font-extrabold text-[#1d3557] mb-2 uppercase">{cupon.titulo}</h1>
+          <img src={cupon.imagenURL} alt={cupon.titulo} width="100" className="w-40 mb-3 mx-auto block"/>
+          <p className="mb-2 text-gray-700">{cupon.descripcion}</p>
+          <div className="text-justify">
+            <p><strong>Detalles:</strong> {cupon.detalles}</p>
+            <p><strong>Precio Oferta:</strong> ${cupon.precioOferta}</p>
+            <p><strong>Precio Regular:</strong> ${cupon.precioRegular}</p>
+            <p><strong>Fecha Límite de Uso:</strong> {cupon.fechaLimiteUsar}</p>
+            <p><strong>Cantidad Disponible:</strong> {cupon.cantidadDisp}</p>
+          </div>
+          <button 
+            onClick={() => setShowPaymentModal(true)}
+            className="bg-[#3C7499] text-white mt-3 px-4 py-2 rounded-lg font-semibold hover:bg-[#6da3c3] transition hover:scale-103"
+            >Confirmar Compra</button>
+        </div>
+      </section>
+      
       {showPaymentModal && (
-        <div className="modal-overlay">
-          <div className="modal">
-            <h2>Ingrese los datos de su tarjeta</h2>
-            <input type="text" placeholder="Número de tarjeta" />
-            <input type="text" placeholder="Nombre en la tarjeta" />
-            <input type="text" placeholder="Fecha de expiración (MM/AA)" />
-            <input type="text" placeholder="Código de seguridad" />
-            <button onClick={() => alert("Compra realizada con éxito")}>Pagar</button>
-            <button onClick={() => setShowPaymentModal(false)}>Cancelar</button>
+        <div className="modal-overlay flex items-center justify-center min-h-screen bg-gray-100">
+          <div className="modal bg-white p-8 rounded-lg shadow-lg w-96">
+            <h2 className="monse text-xl font-semibold text-[#1d3557]">Ingrese los datos de su tarjeta</h2>
+            <input 
+              type="text" 
+              placeholder="Número de tarjeta" 
+              className="w-full p-2 border border-gray-300 rounded-lg"
+              />
+            <input 
+              type="text" 
+              placeholder="Nombre en la tarjeta" 
+              className="w-full p-2 border border-gray-300 rounded-lg"
+              />
+            <input 
+              type="text" 
+              placeholder="Fecha de expiración (MM/AA)" 
+              className="w-full p-2 border border-gray-300 rounded-lg"
+              />
+            <input 
+              type="text" 
+              placeholder="Código de seguridad" 
+              className="w-full p-2 border border-gray-300 rounded-lg"
+              />
+            <button 
+              onClick={() => setShowPaymentModal(false)}
+              className="bg-gray-500 text-white font-bold rounded-xl transition hover:scale-103 hover:bg-gray-400"
+              >Cancelar</button>
+            <button 
+              onClick={() => alert("Compra realizada con éxito")}
+              className="bg-[#3C7499] text-white font-bold rounded-xl hover:bg-[#6da3c3] transition hover:scale-103"
+              >Pagar</button>
           </div>
         </div>
       )}
