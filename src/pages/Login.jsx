@@ -107,7 +107,7 @@ function Login() {
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="bg-white p-8 rounded-lg shadow-lg w-96">
         <img src="/Logo.png" alt="logo" className="w-28 pb-5 mx-auto block" />
-        <h1 className="text-2xl font-bold text-center mb-4 monse">
+        <h1 className="text-2xl font-bold text-center mb-4 monse ">
           {isRegistering ? "Regístrate" : "Inicia Sesión"}
         </h1>
         <form onSubmit={isRegistering ? registerUser : signInUser} className="space-y-4">
@@ -160,7 +160,7 @@ function Login() {
           )}
           <button 
             type="submit" 
-            className="w-full bg-[#3C7499] text-white p-2 rounded-lg hover:bg-[#6da3c3] transition font-bold"
+            className="w-full bg-[#3C7499] text-white p-2 rounded-lg hover:bg-[#6da3c3] transition font-bold hover:scale-103"
           >
             {isRegistering ? "Registrarse" : "Iniciar Sesión"}
           </button>
