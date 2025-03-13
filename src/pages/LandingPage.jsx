@@ -18,14 +18,14 @@ function LandingPage() {
 
   return (
     <div className="landing">
-      <header className="bg-[#012E40] p-5">
-        <img src="CM-Logo(1).png" alt="logo" className="w-32"/>
+      <header className="bg-[#012E40] py-4 px-20 flex items-center justify-between">
+        <img src="/CM.png" alt="logo" className="w-60"/>
         <Link to="/login">
           <button className="text-white bg-[#3C7499] rounded font-bold px-4 py-2 hover:bg-[#6da3c3]">Iniciar Sesión</button>
         </Link>
       </header>
 
-      <section>
+      <section >
         <h2>Ofertas destacadas</h2>
         <div className="cupones">
           {cupones.map((cupon) => (
