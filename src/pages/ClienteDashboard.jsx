@@ -44,12 +44,12 @@ function ClienteDashboard() {
       <header className="w-full bg-[#012E40] fixed py-4 px-20 flex items-center justify-between">
         <img src="/CM.png" alt="logo" className="w-60"/>
         <div className="flex space-x-10">
-          <button>
-            <i className="fa-solid fa-ticket text-white text-3xl hover:scale-130 transition"></i>
-          </button>
-          <button>
-            <i className="fa-solid fa-user text-white text-3xl hover:scale-130 transition"></i>
-          </button>
+          <Link to="/miscupones">
+            <i className="fa-solid fa-ticket text-white text-3xl hover:scale-130 transition cursor-pointer"></i>
+          </Link>
+          <Link to="/perfil">
+            <i className="fa-solid fa-user text-white text-3xl hover:scale-130 transition cursor-pointer"></i>
+          </Link>
         </div>
       </header>
 

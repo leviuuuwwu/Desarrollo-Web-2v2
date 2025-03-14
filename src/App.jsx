@@ -6,6 +6,8 @@ import EmpresaDashboard from "./pages/EmpresaDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
 import PrivateRoute from "./components/PrivateRoute";
 import CuponDetail from "./pages/CuponDetail";
+import MisCupones from "./pages/MisCupones";
+import Perfil from "./pages/Perfil";
 
 function App() {
   return (
@@ -18,7 +20,9 @@ function App() {
         {/* Rutas protegidas para CLIENTES */}
         <Route element={<PrivateRoute allowedRoles={["cliente"]} />}>
           <Route path="/cliente" element={<ClienteDashboard />} />
-          <Route path="/cupon/:id" element={<CuponDetail />} /> {/* Nueva ruta */}
+          <Route path="/cupon/:id" element={<CuponDetail />} />
+          <Route path="/miscupones" element={<MisCupones />} /> {/* Nueva ruta */}
+          <Route path="/perfil" element={<Perfil />} /> {/* Nueva ruta */}
         </Route>
 
         {/* Rutas protegidas para EMPRESAS */}
@@ -31,7 +35,7 @@ function App() {
           <Route path="/admin" element={<AdminDashboard />} />
         </Route>
 
-        {/* Si la ruta no existe, redirigir a la página principal en lugar de login */}
+        {/* Si la ruta no existe, redirigir a la página principal */}
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </Router>
