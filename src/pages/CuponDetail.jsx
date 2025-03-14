@@ -115,8 +115,8 @@ function CuponDetail() {
           cuponesComprados: arrayUnion({
             id: cupon.id,
             titulo: cupon.titulo,
+            imagenURL: cupon.imagenURL, 
             fechaCompra: new Date().toISOString(),
-            imagenURL: cupon.imagenURL,
           }),
         });
       }
@@ -135,14 +135,14 @@ function CuponDetail() {
   return (
     <div className="compra-cupon bg-[#f5f5f5]">
       <header className="w-full bg-[#012E40] fixed py-4 px-20 flex items-center justify-between">
-        <img src="/CM.png" alt="logo" className="w-60"/>
+        <img src="/CM.png" alt="logo" className="w-60" />
         <div className="flex space-x-10">
-          <Link to="/miscupones">
-            <i className="fa-solid fa-ticket text-white text-3xl hover:scale-130 transition cursor-pointer"></i>
-          </Link>
-          <Link to="/perfil">
-            <i className="fa-solid fa-user text-white text-3xl hover:scale-130 transition cursor-pointer"></i>
-          </Link>
+          <button>
+            <i className="fa-solid fa-ticket text-white text-3xl hover:scale-130 transition"></i>
+          </button>
+          <button>
+            <i className="fa-solid fa-user text-white text-3xl hover:scale-130 transition"></i>
+          </button>
         </div>
       </header>
 
