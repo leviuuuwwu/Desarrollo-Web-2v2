@@ -44,6 +44,9 @@ function ClienteDashboard() {
       <header className="w-full bg-[#012E40] fixed py-4 px-20 flex items-center justify-between">
         <img src="/CM.png" alt="logo" className="w-60"/>
         <div className="flex space-x-10">
+          <Link to="/clientedashboard">
+            <i className="fa-solid fa-house text-white text-3xl hover:scale-130 transition cursor-pointer"></i>
+          </Link>
           <Link to="/miscupones">
             <i className="fa-solid fa-ticket text-white text-3xl hover:scale-130 transition cursor-pointer"></i>
           </Link>
@@ -53,14 +56,14 @@ function ClienteDashboard() {
         </div>
       </header>
 
-      <section className="pt-22 px-28">
+      <section className="pt-24 px-28">
         <h2 className="text-2xl text-center monse font-semibold mb-3">Ofertas destacadas</h2>
-        <div className="cupones grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-10 rounded-lg place-items-center">
+        <div className="cupones grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-2 rounded-lg place-items-center">
           {cupones.length > 0 ? (
             cupones.map((cupon) => (
               <div 
                 key={cupon.id} 
-                className={`cupon bg-[#d9d9d9] rounded-lg shadow p-4 text-center max-w-xs mx-auto 
+                className={`cupon bg-[#d9d9d9] rounded-lg shadow p-4 text-center max-w-xs mx-auto mb-7 
                   ${cupones.length === 1 ? "col-span-1" : ""}
                   ${cupones.length === 2 ? "md:col-span-2" : ""}
                   ${cupones.length > 3 && (index % 3 === 0) ? "lg:col-span-3 justify-self-center" : ""}

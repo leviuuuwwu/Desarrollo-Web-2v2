@@ -37,14 +37,14 @@ function LandingPage() {
         </button>
       </header>
 
-      <section className="pt-22 px-28">
+      <section className="pt-24 px-28">
         <h2 className="text-2xl text-center monse font-semibold mb-3">Ofertas destacadas</h2>
 
-        <div className="cupones grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-10 rounded-lg place-items-center">
+        <div className="cupones grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-2 rounded-lg place-items-center">
           {cupones.map((cupon) => (
             <div 
               key={cupon.id} 
-              className="cupon bg-[#d9d9d9] rounded-lg shadow p-4 text-center max-w-xs mx-auto">
+              className="cupon bg-[#d9d9d9] rounded-lg shadow p-4 text-center max-w-xs mx-auto mb-7">
               <h3 className="text-xl font-extrabold text-[#1d3557] mb-2 uppercase">{cupon.titulo}</h3>
               <img 
                 src={cupon.imagenURL} 
