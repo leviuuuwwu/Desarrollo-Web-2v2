@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { doc, getDoc, updateDoc, arrayUnion } from "firebase/firestore";
 import { db, auth } from "../firebase/config";
 import { v4 as uuidv4 } from "uuid";
+import { Link } from "react-router-dom";
+
 
 function CuponDetail() {
   const { id } = useParams();

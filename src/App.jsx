@@ -15,24 +15,24 @@ function App() {
       <Routes>
         {/* Página principal y login */}
         <Route path="/" element={<LandingPage />} />
-        <Route path="/login" element={<Login />} />
+        <Route path="/LogIn" element={<Login />} />
 
         {/* Rutas protegidas para CLIENTES */}
         <Route element={<PrivateRoute allowedRoles={["cliente"]} />}>
-          <Route path="/cliente" element={<ClienteDashboard />} />
-          <Route path="/cupon/:id" element={<CuponDetail />} />
-          <Route path="/miscupones" element={<MisCupones />} /> {/* Nueva ruta */}
-          <Route path="/perfil" element={<Perfil />} /> {/* Nueva ruta */}
+          <Route path="/Cliente" element={<ClienteDashboard />} />
+          <Route path="/Cupon/:id" element={<CuponDetail />} />
+          <Route path="/MisCupones" element={<MisCupones />} /> {/* Nueva ruta */}
+          <Route path="/Perfil" element={<Perfil />} /> {/* Nueva ruta */}
         </Route>
 
         {/* Rutas protegidas para EMPRESAS */}
         <Route element={<PrivateRoute allowedRoles={["empresa"]} />}>
-          <Route path="/empresa" element={<EmpresaDashboard />} />
+          <Route path="/Empresa/:id" element={<EmpresaDashboard />} />
         </Route>
 
         {/* Rutas protegidas para ADMINISTRADORES */}
         <Route element={<PrivateRoute allowedRoles={["admin"]} />}>
-          <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/Administrdor" element={<AdminDashboard />} />
         </Route>
 
         {/* Si la ruta no existe, redirigir a la página principal */}
