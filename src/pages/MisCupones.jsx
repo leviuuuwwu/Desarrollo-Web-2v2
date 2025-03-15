@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { auth, db } from "../firebase/config";
 import { doc, getDoc } from "firebase/firestore";
-import { Link } from "react-router-dom";  // IMPORTANTE: Asegúrate de importar esto
+import { Link } from "react-router-dom"; 
 
 function MisCupones() {
   const [cuponesComprados, setCuponesComprados] = useState([]);
@@ -26,7 +26,7 @@ function MisCupones() {
 
           if (!userData.cuponesComprados || !Array.isArray(userData.cuponesComprados)) {
             console.warn("El usuario no tiene cupones comprados.");
-            setCuponesComprados([]); // Evita errores
+            setCuponesComprados([]);
           } else {
             console.log("Cupones comprados:", userData.cuponesComprados);
             setCuponesComprados(userData.cuponesComprados);
@@ -81,7 +81,9 @@ function MisCupones() {
               <p className="text-gray-500">
                 Fecha de compra: {cupon.fechaCompra ? new Date(cupon.fechaCompra).toLocaleDateString() : "Fecha no disponible"}
               </p>
-              <p className="text-gray-700">ID del cupón: {cupon.id || "ID no disponible"}</p>
+              <p className="text-gray-700">
+                Código del cupón: <strong>{cupon.codigo || "No disponible"}</strong>
+              </p>
             </li>
           ))}
         </ul>

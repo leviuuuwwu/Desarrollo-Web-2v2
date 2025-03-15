@@ -1,10 +1,8 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
-import { db } from "../firebase/config";
-import { auth } from "../firebase/config";
-import { arrayUnion } from "firebase/firestore";
-
+import { doc, getDoc, updateDoc, arrayUnion } from "firebase/firestore";
+import { db, auth } from "../firebase/config";
+import { v4 as uuidv4 } from "uuid";
 
 function CuponDetail() {
   const { id } = useParams();
@@ -46,52 +44,9 @@ function CuponDetail() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const isValidCardNumber = (cardNumber) => {
-    const digits = cardNumber.replace(/\D/g, "").split("").reverse().map(Number);
-    return (
-      digits.reduce((sum, digit, idx) => {
-        if (idx % 2 !== 0) {
-          digit *= 2;
-          if (digit > 9) digit -= 9;
-        }
-        return sum + digit;
-      }, 0) % 10 === 0
-    );
-  };
-
-  const isValidExpirationDate = (date) => {
-    const regex = /^(0[1-9]|1[0-2])\/([0-9]{2})$/;
-    if (!regex.test(date)) return false;
-    
-    const [month, year] = date.split("/").map(Number);
-    const currentYear = new Date().getFullYear() % 100; // Últimos 2 dígitos del año
-    const currentMonth = new Date().getMonth() + 1;
-
-    return year > currentYear || (year === currentYear && month >= currentMonth);
-  };
-
-  const isValidCVV = (cvv) => /^[0-9]{3}$/.test(cvv);
-
   const handlePayment = async () => {
-    const { numeroTarjeta, nombreTarjeta, fechaExpiracion, codigoSeguridad } = formData;
-
-    if (!numeroTarjeta || !nombreTarjeta || !fechaExpiracion || !codigoSeguridad) {
+    if (!formData.numeroTarjeta || !formData.nombreTarjeta || !formData.fechaExpiracion || !formData.codigoSeguridad) {
       alert("Por favor, complete todos los campos.");
-      return;
-    }
-
-    if (!isValidCardNumber(numeroTarjeta)) {
-      alert("Número de tarjeta inválido.");
-      return;
-    }
-
-    if (!isValidExpirationDate(fechaExpiracion)) {
-      alert("Fecha de expiración inválida o pasada.");
-      return;
-    }
-
-    if (!isValidCVV(codigoSeguridad)) {
-      alert("Código de seguridad inválido.");
       return;
     }
 
@@ -102,26 +57,34 @@ function CuponDetail() {
 
     try {
       const cuponRef = doc(db, "cupones", id);
-      await updateDoc(cuponRef, {
-        cantidadDisp: cupon.cantidadDisp - 1,
-      });
+      await updateDoc(cuponRef, { cantidadDisp: cupon.cantidadDisp - 1 });
 
       setCupon((prev) => ({ ...prev, cantidadDisp: prev.cantidadDisp - 1 }));
 
       const user = auth.currentUser;
       if (user) {
         const userRef = doc(db, "users", user.uid);
+        const cuponUUID = uuidv4(); // Generamos el número aleatorio único
+
+        // Guardamos el cupón en el usuario con el código único
         await updateDoc(userRef, {
           cuponesComprados: arrayUnion({
-            id: cupon.id,
+            codigo: cuponUUID,
             titulo: cupon.titulo,
-            imagenURL: cupon.imagenURL, 
+            imagenURL: cupon.imagenURL,
             fechaCompra: new Date().toISOString(),
           }),
         });
+
+        // Enviamos el código a la empresa que vendió el cupón
+        const empresaRef = doc(db, "users", cupon.idVendedor);
+        await updateDoc(empresaRef, {
+          cuponesVendidos: arrayUnion(cuponUUID),
+        });
+
+        alert("Compra realizada con éxito. Tu código único es: " + cuponUUID);
       }
 
-      alert("Compra realizada con éxito.");
       setShowPaymentModal(false);
     } catch (error) {
       console.error("Error al procesar la compra:", error);
@@ -136,31 +99,21 @@ function CuponDetail() {
     <div className="compra-cupon bg-[#f5f5f5]">
       <header className="w-full bg-[#012E40] fixed py-4 px-20 flex items-center justify-between">
         <img src="/CM.png" alt="logo" className="w-60" />
-        <div className="flex space-x-10">
-          <button>
-            <i className="fa-solid fa-ticket text-white text-3xl hover:scale-130 transition"></i>
-          </button>
-          <button>
-            <i className="fa-solid fa-user text-white text-3xl hover:scale-130 transition"></i>
-          </button>
-        </div>
       </header>
 
       <section className="pt-28 px-28 flex justify-center">
         <div className="bg-[#d9d9d9] rounded-lg shadow p-4 text-center">
-          <h1 className="monse text-xl font-extrabold text-[#1d3557] mb-2 uppercase">{cupon.titulo}</h1>
-          <img src={cupon.imagenURL} alt={cupon.titulo} width="100" className="w-40 mb-3 mx-auto block" />
+          <h1 className="text-xl font-extrabold text-[#1d3557] mb-2 uppercase">{cupon.titulo}</h1>
+          <img src={cupon.imagenURL} alt={cupon.titulo} className="w-40 mb-3 mx-auto block" />
           <p className="mb-2 text-gray-700">{cupon.descripcion}</p>
-          <div className="text-justify px-4">
-            <p><strong>Detalles:</strong> {cupon.detalles}</p>
-            <p><strong>Precio Oferta:</strong> ${cupon.precioOferta}</p>
-            <p><strong>Precio Regular:</strong> ${cupon.precioRegular}</p>
-            <p><strong>Fecha Límite de Uso:</strong> {cupon.fechaLimiteUsar}</p>
-            <p><strong>Cantidad Disponible:</strong> {cupon.cantidadDisp}</p>
-          </div>
+          <p><strong>Precio Oferta:</strong> ${cupon.precioOferta}</p>
+          <p><strong>Precio Regular:</strong> ${cupon.precioRegular}</p>
+          <p><strong>Fecha Límite de Uso:</strong> {cupon.fechaLimiteUsar}</p>
+          <p><strong>Cantidad Disponible:</strong> {cupon.cantidadDisp}</p>
+
           <button
             onClick={() => setShowPaymentModal(true)}
-            className="bg-[#3C7499] text-white mt-3 px-4 py-2 rounded-lg font-semibold hover:bg-[#6da3c3] transition hover:scale-103"
+            className="bg-[#3C7499] text-white mt-3 px-4 py-2 rounded-lg font-semibold hover:bg-[#6da3c3] transition"
           >
             Confirmar Compra
           </button>
@@ -170,73 +123,18 @@ function CuponDetail() {
       {showPaymentModal && (
         <div className="modal-overlay flex items-center justify-center min-h-screen bg-gray-100">
           <div className="modal bg-white p-8 rounded-lg shadow-lg w-96">
-            <h2 className="monse text-xl font-semibold text-[#1d3557] mb-3">Ingrese los datos de su tarjeta</h2>
-            <input
-              type="text"
-              name="numeroTarjeta"
-              placeholder="Número de tarjeta"
-              className="w-full p-2 border border-gray-300 rounded-lg mb-2"
-              onChange={handleInputChange}
-            />
-            <input
-              type="text"
-              name="nombreTarjeta"
-              placeholder="Nombre en la tarjeta"
-              className="w-full p-2 border border-gray-300 rounded-lg mb-2"
-              onChange={handleInputChange}
-            />
-            <input
-              type="text"
-              name="fechaExpiracion"
-              placeholder="Fecha de expiración (MM/AA)"
-              className="w-full p-2 border border-gray-300 rounded-lg mb-2"
-              onChange={handleInputChange}
-            />
-            <input
-              type="text"
-              name="codigoSeguridad"
-              placeholder="Código de seguridad"
-              className="w-full p-2 border border-gray-300 rounded-lg mb-2"
-              onChange={handleInputChange}
-            />
+            <h2 className="text-xl font-semibold text-[#1d3557] mb-3">Ingrese los datos de su tarjeta</h2>
+            <input type="text" name="numeroTarjeta" placeholder="Número de tarjeta" className="w-full p-2 border mb-2" onChange={handleInputChange} />
+            <input type="text" name="nombreTarjeta" placeholder="Nombre en la tarjeta" className="w-full p-2 border mb-2" onChange={handleInputChange} />
+            <input type="text" name="fechaExpiracion" placeholder="Fecha de expiración (MM/AA)" className="w-full p-2 border mb-2" onChange={handleInputChange} />
+            <input type="text" name="codigoSeguridad" placeholder="Código de seguridad" className="w-full p-2 border mb-2" onChange={handleInputChange} />
             <div className="flex justify-between mt-4">
-              <button
-                onClick={() => setShowPaymentModal(false)}
-                className="bg-gray-500 text-white font-bold py-2 px-4 rounded-xl transition hover:scale-103 hover:bg-gray-400"
-              >
-                Cancelar
-              </button>
-              <button
-                onClick={handlePayment}
-                className="bg-[#3C7499] text-white font-bold py-2 px-4 rounded-xl hover:bg-[#6da3c3] transition hover:scale-103"
-              >
-                Pagar
-              </button>
+              <button onClick={() => setShowPaymentModal(false)} className="bg-gray-500 text-white py-2 px-4 rounded-lg hover:bg-gray-400">Cancelar</button>
+              <button onClick={handlePayment} className="bg-[#3C7499] text-white py-2 px-4 rounded-lg hover:bg-[#6da3c3]">Pagar</button>
             </div>
           </div>
         </div>
       )}
-
-      <style jsx>{`
-        .modal-overlay {
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          background: rgba(0, 0, 0, 0.5);
-          display: flex;
-          justify-content: center;
-          align-items: center;
-        }
-        .modal {
-          background: white;
-          padding: 20px;
-          border-radius: 10px;
-          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-          text-align: center;
-        }
-      `}</style>
     </div>
   );
 }
