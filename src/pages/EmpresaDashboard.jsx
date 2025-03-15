@@ -105,19 +105,39 @@ function EmpresaDashboard() {
   };
 
   return (
-    <div className="p-4 max-w-lg mx-auto">
-      <h1 className="text-2xl font-bold mb-4">Panel de Administración</h1>
-      <button onClick={() => setModalOpen(true)} className="bg-blue-500 text-white px-4 py-2 rounded mb-4">+ Crear Cupón</button>
-      <button onClick={() => setRedeemModalOpen(true)} className="bg-green-500 text-white px-4 py-2 rounded mb-4 ml-2">🎟️ Redimir Cupón</button>
-      <h2 className="text-xl font-semibold mb-2">Cupones Generados</h2>
-      <ul>
-        {cupones.map((cupon) => (
-          <li key={cupon.id} className="border p-2 mb-2">
-            <strong>{cupon.titulo}</strong> - {cupon.descripcion}
-            <span className={`ml-2 px-2 py-1 text-sm rounded ${cupon.estado === "redimido" ? "bg-red-500 text-white" : "bg-green-300"}`}>{cupon.estado}</span>
-          </li>
-        ))}
-      </ul>
+    <div className="bg-[#f5f5f5]">
+      <header className="w-full bg-[#012E40] fixed py-4 px-20 flex items-center justify-between">
+        <img src="/CM.png" alt="logo" className="w-60" />
+        <div className="flex space-x-5">
+          <button onClick={() => setModalOpen(true)} className="bg-[#3C7499] text-white px-4 py-2 rounded-lg font-semibold hover:bg-[#6da3c3] transition hover:scale-103 ">+ Crear Cupón</button>
+          <button onClick={() => setRedeemModalOpen(true)} className="bg-[#00ca4e] text-white px-4 py-2 rounded-lg font-semibold hover:bg-[#00f263] transition hover:scale-103">Redimir Cupón</button>
+        </div>
+      </header>
+
+      <section className="pt-24 px-28">
+        <h1 className="text-2xl text-center monse font-semibold mb-3">Panel de Administración</h1>
+        <h2 className="text-xl font-bold mb-4 text-center">Cupones Generados</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-2 rounded-lg place-items-center">
+          {cupones.map((cupon) => (
+            <div 
+              key={cupon.id} 
+              className="bg-[#d9d9d9] rounded-lg shadow p-4 text-center max-w-xs mx-auto mb-7">
+              <h3 className="text-xl font-extrabold text-[#1d3557] mb-2 uppercase">{cupon.titulo}</h3>
+              <img 
+                src={cupon.imagenURL}
+                alt={cupon.titulo} 
+                className="w-40 mb-3 mx-auto block"
+              />
+              <p className="mb-2 text-gray-700">{cupon.descripcion}</p>
+              <div className="text-justify px-4 mb-3">
+                <p><strong>Precio Regular:</strong> ${cupon.precioRegular}</p>
+                <p><strong>Precio Oferta:</strong> ${cupon.precioOferta}</p>
+              </div>
+              <span className={`ml-2 px-2 py-1 rounded-lg ${cupon.estado === "redimido" ? "bg-[#ff2323] text-white" : "bg-[#00f263]"}`}>{cupon.estado}</span>
+            </div>
+          ))}
+        </div>
+      </section>
     </div>
   );
 }
