@@ -27,7 +27,7 @@ function App() {
 
         {/* Rutas protegidas para EMPRESAS */}
         <Route element={<PrivateRoute allowedRoles={["empresa"]} />}>
-          <Route path="/Empresa/:id" element={<EmpresaDashboard />} />
+          <Route path="/Empresa" element={<EmpresaDashboard />} />
         </Route>
 
         {/* Rutas protegidas para ADMINISTRADORES */}
