@@ -63,11 +63,7 @@ function ClienteDashboard() {
             cupones.map((cupon) => (
               <div 
                 key={cupon.id} 
-                className={`cupon bg-[#d9d9d9] rounded-lg shadow p-4 text-center max-w-xs mx-auto mb-7 
-                  ${cupones.length === 1 ? "col-span-1" : ""}
-                  ${cupones.length === 2 ? "md:col-span-2" : ""}
-                  ${cupones.length > 3 && (index % 3 === 0) ? "lg:col-span-3 justify-self-center" : ""}
-                `}>
+                className="cupon bg-[#d9d9d9] rounded-lg shadow p-4 text-center max-w-xs mx-auto mb-7">
                 <h3 className="text-xl font-extrabold text-[#1d3557] mb-2 uppercase">{cupon.titulo}</h3>
                 <img 
                   src={cupon.imagenURL} 

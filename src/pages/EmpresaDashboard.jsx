@@ -73,93 +73,114 @@ function EmpresaDashboard() {
   });
 
   return (
-    <div className="p-4 max-w-lg mx-auto">
-      <h1 className="text-2xl font-bold mb-4">Panel de Administración</h1>
-      <button onClick={() => setModalOpen(true)} className="bg-blue-500 text-white px-4 py-2 rounded mb-4">
-        + Crear Cupón
-      </button>
-
-      <h2 className="text-xl font-semibold mb-2">Cupones Generados</h2>
-      <ul>
-        {cupones.map((cupon) => (
-          <li key={cupon.id} className="border p-2 mb-2">
-            <strong>{cupon.titulo}</strong> - {cupon.descripcion}
-            <span className="ml-2 px-2 py-1 text-sm rounded bg-green-300">{cupon.estado}</span>
-          </li>
-        ))}
-      </ul>
+    <div className="bg-[#f5f5f5]">
+      <header className="w-full bg-[#012E40] fixed py-4 px-20 flex items-center justify-between">
+        <img src="/CM.png" alt="logo" className="w-60"/>
+        <button onClick={() => setModalOpen(true)} className="bg-[#3c7499] text-white px-4 py-2 rounded-lg font-semibold hover:bg-[#6da3c3] transition hover:scale-103">
+          + Crear Cupón
+        </button>
+      </header>
+      
+      <section className="pt-24 px-28">
+        <h1 className="text-2xl font-semibold mb-3 text-center monse">Panel de Administración</h1>
+        <h2 className="text-xl font-bold mb-4 text-center">Cupones Generados</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-2 p-1 rounded-lg place-items-center">
+          {cupones.map((cupon) => (
+            <div key={cupon.id} 
+              className="cupon bg-[#d9d9d9] rounded-lg shadow p-4 text-center max-w-xs mx-auto mb-5">
+              <h3 className="text-xl font-extrabold text-[#1d3557] mb-2 uppercase">{cupon.titulo}</h3>
+              <img src={cupon.imagenURL} alt={cupon.titulo} width="100" className="w-40 mb-3 mx-auto block" />
+              <p className="mb-2 text-gray-700">{cupon.descripcion}</p>
+              <div className="text-justify px-4 mb-2">
+                  <p><strong>Precio Regular:</strong> ${cupon.precioRegular}</p>
+                  <p><strong>Precio Oferta:</strong> ${cupon.precioOferta}</p>
+              </div>
+              <span className="text-white font-semibold ml-2 px-2 py-1 rounded-lg bg-[#00f263]">{cupon.estado}</span>
+            </div>
+          ))}
+        </div>
+      </section>
 
       {modalOpen && (
-        <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center">
-          <div className="bg-white p-6 rounded shadow-lg w-96">
-            <h2 className="text-xl font-bold mb-4">Crear Cupón</h2>
+        <div className="fixed inset-0 bg-gray-200 bg-opacity-50 flex justify-center items-center">
+          <div className="bg-white p-4 rounded-sm shadow-lg w-110">
+            <h2 className="text-2xl font-bold mb-1 text-center monse">Crear Cupón</h2>
 
-            <form onSubmit={formik.handleSubmit}>
-              {[
-                { name: "titulo", type: "text", placeholder: "Título" },
-                { name: "descripcion", type: "text", placeholder: "Descripción" },
-                { name: "detalles", type: "textarea", placeholder: "Detalles" },
-                { name: "cantidadDisp", type: "number", placeholder: "Cantidad Disponible" },
-                { name: "fechaInicio", type: "datetime-local" },
-                { name: "fechaFin", type: "datetime-local" },
-                { name: "fechaLimiteUsar", type: "datetime-local" },
-                { name: "imagenURL", type: "text", placeholder: "URL de Imagen" },
-                { name: "precioOferta", type: "number", placeholder: "Precio Oferta" },
-                { name: "precioRegular", type: "number", placeholder: "Precio Regular" },
-              ].map(({ name, type, placeholder }) => (
-                <div key={name} className="mb-2">
-                  {type === "textarea" ? (
-                    <textarea
-                      name={name}
-                      placeholder={placeholder}
-                      value={formik.values[name]}
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                      className="w-full border p-2"
-                    />
-                  ) : (
-                    <input
-                      type={type}
-                      name={name}
-                      placeholder={placeholder}
-                      value={formik.values[name]}
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                      className="w-full border p-2"
-                    />
-                  )}
-                  {formik.touched[name] && formik.errors[name] && (
-                    <p className="text-red-500 text-sm">{formik.errors[name]}</p>
+            <div className="max-h-screen overflow-y-auto p-2">
+              <form onSubmit={formik.handleSubmit} className="bg-white rounded-sm space-y-2 max-w-sm mx-auto">
+                {[  
+                  { name: "titulo", type: "text", placeholder: "Título" },
+                  { name: "descripcion", type: "text", placeholder: "Descripción" },
+                  { name: "detalles", type: "textarea", placeholder: "Detalles" },
+                  { name: "cantidadDisp", type: "number", placeholder: "Cantidad Disponible" },
+                  { name: "fechaInicio", type: "datetime-local" },
+                  { name: "fechaFin", type: "datetime-local", placeholder: "Fecha Fin de Cupon"},
+                  { name: "fechaLimiteUsar", type: "datetime-local", placeholder: "Fecha Limite de Usar" },
+                  { name: "imagenURL", type: "text", placeholder: "URL de Imagen" },
+                  { name: "precioOferta", type: "number", placeholder: "Precio Oferta" },
+                  { name: "precioRegular", type: "number", placeholder: "Precio Regular" },
+                ].map(({ name, type, placeholder }) => (
+                  <div key={name} className="flex flex-col">
+                    {type === "textarea" ? (
+                      <textarea
+                        name={name}
+                        placeholder={placeholder}
+                        value={formik.values[name]}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        className="w-full p-1 pl-2 border border-gray-300 rounded-lg"
+                      />
+                    ) : (
+                      <input
+                        type={type}
+                        name={name}
+                        placeholder={placeholder}
+                        value={formik.values[name]}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        className="w-full p-1 border border-gray-300 rounded-lg"
+                      />
+                    )}
+                    {formik.touched[name] && formik.errors[name] && (
+                      <p className="text-red-500 text-xs mt-1">{formik.errors[name]}</p>
+                    )}
+                  </div>
+                ))}
+
+                {/* Select de Rubro */}
+                <div className="flex flex-col">
+                  <select
+                    name="rubro"
+                    value={formik.values.rubro}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    className="w-full border border-gray-300 p-1 rounded-md"
+                  >
+                    <option value="">Selecciona un rubro</option>
+                    <option value="diversion">Diversión</option>
+                    <option value="tecnologia">Tecnología</option>
+                    <option value="comida">Comida</option>
+                  </select>
+                  {formik.touched.rubro && formik.errors.rubro && (
+                    <p className="text-red-500 text-xs mt-1">{formik.errors.rubro}</p>
                   )}
                 </div>
-              ))}
 
-              {/* Select de Rubro */}
-              <div className="mb-2">
-                <select
-                  name="rubro"
-                  value={formik.values.rubro}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  className="w-full border p-2"
-                >
-                  <option value="">Selecciona un rubro</option>
-                  <option value="diversión">Diversión</option>
-                  <option value="tecnología">Tecnología</option>
-                  <option value="comida">Comida</option>
-                </select>
-                {formik.touched.rubro && formik.errors.rubro && (
-                  <p className="text-red-500 text-sm">{formik.errors.rubro}</p>
-                )}
-              </div>
-
-              <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded w-full">
-                Guardar
-              </button>
-              <button type="button" onClick={() => setModalOpen(false)} className="mt-2 text-gray-500 underline w-full">
-                Cancelar
-              </button>
-            </form>
+                {/* Botones */}
+                <div className="flex space-x-2 mt-3">
+                <button 
+                    type="button" 
+                    onClick={() => setModalOpen(false)} 
+                    className="w-full text-white bg-[#ff2323] py-2 rounded-lg hover:bg-[#ff5757] transition hover:scale-103 font-bold"
+                  >
+                    Cancelar
+                  </button>
+                  <button type="submit" className="w-full text-white bg-[#3c7499] py-2 rounded-lg hover:bg-[#6da3c3] transition hover:scale-103 font-bold">
+                    Guardar
+                  </button>
+                </div>
+              </form>
+            </div>
           </div>
         </div>
       )}
