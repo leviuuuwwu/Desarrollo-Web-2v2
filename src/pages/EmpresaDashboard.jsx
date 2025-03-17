@@ -76,7 +76,7 @@ function EmpresaDashboard() {
     <div className="bg-[#f5f5f5]">
       <header className="w-full bg-[#012E40] fixed py-4 px-20 flex items-center justify-between">
         <img src="/CM.png" alt="logo" className="w-60"/>
-        <button onClick={() => setModalOpen(true)} className="bg-[#3c7499] text-white px-4 py-2 rounded-lg font-semibold hover:bg-[#6da3c3] transition hover:scale-103">
+        <button onClick={() => setModalOpen(true)} className="bg-[#3c7499] text-white px-4 py-2 rounded-lg font-bold hover:bg-[#6da3c3] transition hover:scale-103">
           + Crear Cupón
         </button>
       </header>
@@ -92,6 +92,7 @@ function EmpresaDashboard() {
               <img src={cupon.imagenURL} alt={cupon.titulo} width="100" className="w-40 mb-3 mx-auto block" />
               <p className="mb-2 text-gray-700">{cupon.descripcion}</p>
               <div className="text-justify px-4 mb-2">
+                  <h3><strong>Cantidad Disponible:</strong> {cupon.cantidadDisp}</h3>
                   <p><strong>Precio Regular:</strong> ${cupon.precioRegular}</p>
                   <p><strong>Precio Oferta:</strong> ${cupon.precioOferta}</p>
               </div>
