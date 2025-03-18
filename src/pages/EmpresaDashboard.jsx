@@ -13,7 +13,7 @@ function EmpresaDashboard() {
     const obtenerCupones = async () => {
       const empresaId = auth.currentUser?.uid;
       if (!empresaId) return;
-      const q = query(collection(db, "cupones"), where("idVendedor", "==", empresaId));
+      const q = query(collection(db, "cupones"), where("idEmpresa", "==", empresaId));
       const querySnapshot = await getDocs(q);
       setCupones(querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
     };
