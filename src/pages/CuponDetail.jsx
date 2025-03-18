@@ -10,6 +10,7 @@ function CuponDetail() {
   const { id } = useParams();
   const [cupon, setCupon] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [modal, setModal] = useState(false);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [formData, setFormData] = useState({
     numeroTarjeta: "",
