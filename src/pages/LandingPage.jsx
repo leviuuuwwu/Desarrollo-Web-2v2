@@ -40,7 +40,7 @@ function LandingPage() {
       <section className="pt-24 px-28">
         <h2 className="text-2xl text-center monse font-semibold mb-3">Ofertas destacadas</h2>
 
-        <div className="cupones grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-2 rounded-lg place-items-center">
+        <div className="cupones grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-2 p-1 rounded-lg place-items-center">
           {cupones.map((cupon) => (
             <div 
               key={cupon.id} 
@@ -49,7 +49,7 @@ function LandingPage() {
               <img 
                 src={cupon.imagenURL} 
                 alt={cupon.titulo} 
-                className="w-40 mb-3 mx-auto block"
+                className="w-50 h-auto mb-3 mx-auto block"
               />
               <p className="mb-2 text-gray-700">{cupon.descripcion}</p>
               <div className="text-justify px-4">

@@ -2,11 +2,13 @@ import { useEffect, useState } from "react";
 import { auth, db } from "../firebase/config";
 import { doc, getDoc } from "firebase/firestore";
 import { Link } from "react-router-dom"; 
+import Perfil from "../components/modalPerfil";
 
 function MisCupones() {
   const [cuponesComprados, setCuponesComprados] = useState([]);
   const [loading, setLoading] = useState(true);
-
+  const [modal, setModal] = useState(false);
+  
   useEffect(() => {
     const fetchCuponesComprados = async () => {
       setLoading(true);
@@ -44,6 +46,10 @@ function MisCupones() {
     fetchCuponesComprados();
   }, []);
 
+  const toggleModal = () => {
+    setModal(!modal);
+  }
+
   if (loading) return <p className="text-center">Cargando cupones...</p>;
 
   return (
@@ -57,42 +63,55 @@ function MisCupones() {
           <Link to="/miscupones">
             <i className="fa-solid fa-ticket text-white text-3xl hover:scale-130 transition cursor-pointer"></i>
           </Link>
-          <Link to="/perfil">
+          <button onClick={toggleModal} className="relative bg-transparent border-none outline-none">
             <i className="fa-solid fa-user text-white text-3xl hover:scale-130 transition cursor-pointer"></i>
-          </Link>
+            {modal && <Perfil modal={modal} toggleModal={toggleModal}/>}
+          </button>
         </div>
       </header>
       
-      <h1 className="text-2xl font-bold text-center mb-4">Mis Cupones</h1>
 
-      {cuponesComprados.length > 0 ? (
-        <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {cuponesComprados.map((cupon, index) => (
-            <li key={index} className="bg-white shadow-md rounded-lg p-4 text-center">
-              <h2 className="text-lg font-semibold">{cupon.titulo || "Título no disponible"}</h2>
+      <section className="pt-24 px-28">
+        <h1 className="text-2xl font-semibold text-center mb-3 monse">Mis Cupones</h1>
+        {cuponesComprados.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 p-1 rounded-lg place-items-center">
+            {cuponesComprados.map((cupon, index) => (
+              <div key={index} 
+                className="bg-[#d9d9d9] rounded-lg shadow p-4 text-center max-w-xs mx-auto mb-5">
+                <h2 className="text-xl font-extrabold text-[#1d3557] mb-2 uppercase">{cupon.titulo || "Título no disponible"}</h2>
 
-              {cupon.imagenURL ? (
-                <img 
-                  src={cupon.imagenURL} 
-                  alt={cupon.titulo || "Cupón"} 
-                  className="w-40 h-40 object-cover mx-auto my-2 rounded-lg shadow-md"
-                />
-              ) : (
-                <p className="text-gray-500">Imagen no disponible</p>
-              )}
+                {cupon.imagenURL ? (
+                  <img 
+                    src={cupon.imagenURL} 
+                    alt={cupon.titulo || "Cupón"} 
+                    className="w-50 h-auto mb-3 mx-auto block"
+                  />
+                ) : (
+                  <p className="text-gray-500">Imagen no disponible</p>
+                )}
 
-              <p className="text-gray-500">
-                Fecha de compra: {cupon.fechaCompra ? new Date(cupon.fechaCompra).toLocaleDateString() : "Fecha no disponible"}
-              </p>
-              <p className="text-gray-700">
-                Código del cupón: <strong>{cupon.codigo || "No disponible"}</strong>
-              </p>
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p className="text-center text-gray-500">Aún no has comprado cupones.</p>
-      )}
+                <div className="text-justify px-4 mb-2">
+                  <p>
+                    <strong>Fecha de compra:</strong> {cupon.fechaCompra ? new Date(cupon.fechaCompra).toLocaleDateString() : "Fecha no disponible"}
+                  </p>
+
+                  {/* Levi arregla esto */}
+                  <p>
+                    <strong>Fecha de vencimiento:</strong> {cupon.fechaCompra ? new Date(cupon.fechaCompra).toLocaleDateString() : "Fecha no disponible"}
+                  </p>
+                  <p>
+                    <strong>Código del cupón:</strong> {cupon.codigo || "No disponible"}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+          
+        ) : (
+          <p className="text-center text-gray-500">Aún no has comprado cupones.</p>
+        )}
+      </section>
+
     </div>
   );
 }
