@@ -2,7 +2,7 @@ import { useState } from "react";
 import { db, auth } from "../firebase/config";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 
-function ValidarCupon() {
+function TrabajadroDashboard() {
   const [codigo, setCodigo] = useState("");
   const [cupon, setCupon] = useState(null);
   const [error, setError] = useState("");
@@ -139,4 +139,4 @@ function ValidarCupon() {
   );
 }
 
-export default ValidarCupon;
+export default TrabajadroDashboard;
