@@ -49,7 +49,7 @@ function LandingPage() {
               <img 
                 src={cupon.imagenURL} 
                 alt={cupon.titulo} 
-                className="h-40 mb-3 mx-auto block"
+                className="w-50 h-auto mb-3 mx-auto block"
               />
               <p className="mb-2 text-gray-700">{cupon.descripcion}</p>
               <div className="text-justify px-4">

@@ -84,7 +84,7 @@ function MisCupones() {
                   <img 
                     src={cupon.imagenURL} 
                     alt={cupon.titulo || "Cupón"} 
-                    className="w-40 mb-3 mx-auto block"
+                    className="w-50 h-auto mb-3 mx-auto block"
                   />
                 ) : (
                   <p className="text-gray-500">Imagen no disponible</p>
@@ -93,6 +93,11 @@ function MisCupones() {
                 <div className="text-justify px-4 mb-2">
                   <p>
                     <strong>Fecha de compra:</strong> {cupon.fechaCompra ? new Date(cupon.fechaCompra).toLocaleDateString() : "Fecha no disponible"}
+                  </p>
+
+                  {/* Levi arregla esto */}
+                  <p>
+                    <strong>Fecha de vencimiento:</strong> {cupon.fechaCompra ? new Date(cupon.fechaCompra).toLocaleDateString() : "Fecha no disponible"}
                   </p>
                   <p>
                     <strong>Código del cupón:</strong> {cupon.codigo || "No disponible"}

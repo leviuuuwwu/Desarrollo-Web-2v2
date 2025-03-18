@@ -4,7 +4,7 @@ import { doc, getDoc, updateDoc, arrayUnion } from "firebase/firestore";
 import { db, auth } from "../firebase/config";
 import { v4 as uuidv4 } from "uuid";
 import { Link } from "react-router-dom";
-
+import Perfil from "../components/modalPerfil";
 
 function CuponDetail() {
   const { id } = useParams();
@@ -41,6 +41,10 @@ function CuponDetail() {
 
     fetchCupon();
   }, [id]);
+
+  const toggleModal = () => {
+    setModal(!modal)
+  }
 
   const handleInputChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -108,9 +112,10 @@ function CuponDetail() {
           <Link to="/miscupones">
             <i className="fa-solid fa-ticket text-white text-3xl hover:scale-130 transition cursor-pointer"></i>
           </Link>
-          <Link to="/perfil">
+          <button onClick={toggleModal} className="relative bg-transparent border-none outline-none">
             <i className="fa-solid fa-user text-white text-3xl hover:scale-130 transition cursor-pointer"></i>
-          </Link>
+            {modal && <Perfil modal={modal} toggleModal={toggleModal}/>}
+          </button>
         </div>
       </header>
 

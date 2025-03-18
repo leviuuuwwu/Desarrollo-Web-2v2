@@ -3,6 +3,7 @@ import { db, auth } from "../firebase/config";
 import { collection, addDoc, query, where, getDocs } from "firebase/firestore";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { Link } from "react-router-dom";
 
 function EmpresaDashboard() {
   const [cupones, setCupones] = useState([]);
@@ -76,9 +77,14 @@ function EmpresaDashboard() {
     <div className="bg-[#f5f5f5]">
       <header className="w-full bg-[#012E40] fixed py-4 px-20 flex items-center justify-between">
         <img src="/CM.png" alt="logo" className="w-60"/>
-        <button onClick={() => setModalOpen(true)} className="bg-[#3c7499] text-white px-4 py-2 rounded-lg font-bold hover:bg-[#6da3c3] transition hover:scale-103">
-          + Crear Cupón
-        </button>
+        <div className="flex space-x-8">
+          <Link to="/gestionempleado">
+            <i className="fa-solid fa-users text-white text-3xl hover:scale-130 transition cursor-pointer"></i>
+          </Link>
+          <button onClick={() => setModalOpen(true)} className="bg-[#3c7499] text-white px-4 py-2 rounded-lg font-bold hover:bg-[#6da3c3] transition hover:scale-103">
+            + Crear Cupón
+          </button>
+        </div>
       </header>
       
       <section className="pt-24 px-28">
