@@ -2,11 +2,13 @@ import { useEffect, useState } from "react";
 import { auth, db } from "../firebase/config";
 import { doc, getDoc } from "firebase/firestore";
 import { Link } from "react-router-dom"; 
+import Perfil from "../components/modalPerfil";
 
 function MisCupones() {
   const [cuponesComprados, setCuponesComprados] = useState([]);
   const [loading, setLoading] = useState(true);
-
+  const [modal, setModal] = useState(false);
+  
   useEffect(() => {
     const fetchCuponesComprados = async () => {
       setLoading(true);
@@ -44,6 +46,10 @@ function MisCupones() {
     fetchCuponesComprados();
   }, []);
 
+  const toggleModal = () => {
+    setModal(!modal);
+  }
+
   if (loading) return <p className="text-center">Cargando cupones...</p>;
 
   return (
@@ -57,9 +63,10 @@ function MisCupones() {
           <Link to="/miscupones">
             <i className="fa-solid fa-ticket text-white text-3xl hover:scale-130 transition cursor-pointer"></i>
           </Link>
-          <Link to="/perfil">
+          <button onClick={toggleModal} className="relative bg-transparent border-none outline-none">
             <i className="fa-solid fa-user text-white text-3xl hover:scale-130 transition cursor-pointer"></i>
-          </Link>
+            {modal && <Perfil modal={modal} toggleModal={toggleModal}/>}
+          </button>
         </div>
       </header>
       
@@ -67,7 +74,7 @@ function MisCupones() {
       <section className="pt-24 px-28">
         <h1 className="text-2xl font-semibold text-center mb-3 monse">Mis Cupones</h1>
         {cuponesComprados.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-2 p-1 rounded-lg place-items-center">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 p-1 rounded-lg place-items-center">
             {cuponesComprados.map((cupon, index) => (
               <div key={index} 
                 className="bg-[#d9d9d9] rounded-lg shadow p-4 text-center max-w-xs mx-auto mb-5">
@@ -99,6 +106,7 @@ function MisCupones() {
           <p className="text-center text-gray-500">Aún no has comprado cupones.</p>
         )}
       </section>
+
     </div>
   );
 }

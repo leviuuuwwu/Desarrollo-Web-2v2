@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase/config";
-import { Link } from "react-router-dom";
 
 function ClienteDashboard() {
   const [cupones, setCupones] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [modal, setModal] = useState(false);
 
   useEffect(() => {
     const fetchCupones = async () => {
@@ -50,15 +50,16 @@ function ClienteDashboard() {
           <Link to="/miscupones">
             <i className="fa-solid fa-ticket text-white text-3xl hover:scale-130 transition cursor-pointer"></i>
           </Link>
-          <Link to="/perfil">
+          <button onClick={toggleModal} className="relative bg-transparent border-none outline-none">
             <i className="fa-solid fa-user text-white text-3xl hover:scale-130 transition cursor-pointer"></i>
-          </Link>
+             {modal && <Perfil modal={modal} toggleModal={toggleModal}/>}
+          </button>
         </div>
       </header>
 
       <section className="pt-24 px-28">
         <h2 className="text-2xl text-center monse font-semibold mb-3">Ofertas destacadas</h2>
-        <div className="cupones grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-2 rounded-lg place-items-center">
+        <div className="cupones grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-2 p-1 rounded-lg place-items-center">
           {cupones.length > 0 ? (
             cupones.map((cupon) => (
               <div 
