@@ -1,18 +1,19 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import LandingPage from "./pages/LandingPage";
 import Login from "./pages/Login";
 import ClienteDashboard from "./pages/ClienteDashboard";
 import EmpresaDashboard from "./pages/EmpresaDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
-import TrabajadorDashboard from "./pages/TrabajadorDashboard"; // Importamos la nueva página
+import TrabajadorDashboard from "./pages/TrabajadorDashboard";
 import PrivateRoute from "./components/PrivateRoute";
 import CuponDetail from "./pages/CuponDetail";
 import MisCupones from "./pages/MisCupones";
-import Perfil from "./components/ModalPerfil";
+import Perfil from "./components/modalPerfil";
 
 function App() {
   return (
     <Router>
+      <RedirectAfterLogin />
       <Routes>
         {/* Página principal y login */}
         <Route path="/" element={<LandingPage />} />
