@@ -62,7 +62,7 @@ function Login() {
     e.preventDefault();
 
     if (password !== confirmPassword) {
-      alert("⚠️ Las contraseñas no coinciden");
+      alert("Las contraseñas no coinciden");
       return;
     }
 
@@ -80,7 +80,7 @@ function Login() {
       navigate("/cliente"); 
     } catch (error) {
       console.error("Error al registrar usuario:", error);
-      alert("❌ Error al registrarse. Intenta de nuevo.");
+      alert("Error al registrarse. Intenta de nuevo.");
     }
   };
 
@@ -111,11 +111,11 @@ function Login() {
             navigate("/cliente");
         }
       } else {
-        alert("⚠️ No se encontraron datos de usuario.");
+        alert("No se encontraron datos de usuario.");
       }
     } catch (error) {
       console.error("Error al iniciar sesión:", error);
-      alert("❌ Correo o contraseña incorrectos. Intenta de nuevo.");
+      alert("Correo o contraseña incorrectos. Intenta de nuevo.");
     }
   };
 
@@ -124,7 +124,7 @@ function Login() {
       <div className="bg-white p-8 rounded-lg shadow-lg w-96">
         <img src="/Logo.png" alt="logo" className="w-28 pb-5 mx-auto block" />
         <h1 className="text-2xl font-bold text-center mb-4 monse ">
-          {isRegistering ? "Regístrate" : "Inicia Sesión"}
+          {isRegistering ? "Regístrate" : "Iniciar Sesión"}
         </h1>
         <form onSubmit={isRegistering ? registerUser : signInUser} className="space-y-4">
           {isRegistering && (
