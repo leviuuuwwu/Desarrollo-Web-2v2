@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { db } from "../firebase/config";
 import { collection, getDocs, updateDoc, doc } from "firebase/firestore";
+import { Link } from "react-router-dom";
 
 function AdminDashboard() {
   const [empresas, setEmpresas] = useState([]);
@@ -43,35 +44,48 @@ function AdminDashboard() {
 
   return (
     <div>
-      <h1>Panel de Administración</h1>
+      <header className="w-full bg-[#012E40] fixed py-4 px-20 flex items-center justify-between">
+        <img src="/CM.png" alt="logo" className="w-60"/>
+        <div className="flex space-x-10">
+          <Link to="/">
+            <button>
+            <i class="fa-solid fa-arrow-right-from-bracket text-white text-3xl hover:scale-130 transition cursor-pointer"></i>
+            </button>
+          </Link>
+        </div>
+      </header>
 
-      <h2>Empresas Pendientes</h2>
-      <ul>
-        {empresas.length > 0 ? (
-          empresas.map(empresa => (
-            <li key={empresa.id}>
-              {empresa.nombre}{" "}
-              <button onClick={() => aprobarEmpresa(empresa.id)}>Aprobar</button>
-            </li>
-          ))
-        ) : (
-          <p>No hay empresas pendientes</p>
-        )}
-      </ul>
+      <section className="pt-24 px-28">
+        <h1 className="text-2xl text-center monse font-semibold mb-3">Panel de Administración</h1>
 
-      <h2>Cupones Pendientes</h2>
-      <ul>
-        {cupones.length > 0 ? (
-          cupones.map(cupon => (
-            <li key={cupon.id}>
-              {cupon.codigo} - {cupon.descuento}%{" "}
-              <button onClick={() => aprobarCupon(cupon.id)}>Aprobar</button>
-            </li>
-          ))
-        ) : (
-          <p>No hay cupones pendientes</p>
-        )}
-      </ul>
+        <h2 className="text-xl font-bold mb-4 text-center">Empresas Pendientes</h2>
+        <div>
+          {empresas.length > 0 ? (
+            empresas.map(empresa => (
+              <div key={empresa.id}>
+                {empresa.nombre}{" "}
+                <button onClick={() => aprobarEmpresa(empresa.id)}>Aprobar</button>
+              </div>
+            ))
+          ) : (
+            <p>No hay empresas pendientes</p>
+          )}
+        </div>
+
+        <h2 className="text-xl font-bold mb-4 text-center">Cupones Pendientes</h2>
+        <div>
+          {cupones.length > 0 ? (
+            cupones.map(cupon => (
+              <div key={cupon.id}>
+                {cupon.codigo} - {cupon.descuento}%{" "}
+                <button onClick={() => aprobarCupon(cupon.id)}>Aprobar</button>
+              </div>
+            ))
+          ) : (
+            <p>No hay cupones pendientes</p>
+          )}
+        </div>
+      </section>
     </div>
   );
 }

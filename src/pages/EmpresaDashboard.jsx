@@ -46,7 +46,7 @@ function EmpresaDashboard() {
       imagenURL: Yup.string().url("Debe ser una URL válida").required("Requerido"),
       precioOferta: Yup.number().min(0, "Debe ser positivo").required("Requerido"),
       precioRegular: Yup.number().min(0, "Debe ser positivo").required("Requerido"),
-      rubro: Yup.string().oneOf(["diversión", "tecnología", "comida"], "Selección inválida").required("Requerido"),
+      rubro: Yup.string().oneOf(["diversión", "tecnología", "comida", "belleza"], "Selección inválida").required("Requerido"),
     }),
     onSubmit: async (values) => {
       const empresaId = auth.currentUser?.uid;
@@ -78,12 +78,17 @@ function EmpresaDashboard() {
       <header className="w-full bg-[#012E40] fixed py-4 px-20 flex items-center justify-between">
         <img src="/CM.png" alt="logo" className="w-60"/>
         <div className="flex space-x-8">
-          <Link to="/gestionempleado">
-            <i className="fa-solid fa-users text-white text-3xl hover:scale-130 transition cursor-pointer"></i>
-          </Link>
           <button onClick={() => setModalOpen(true)} className="bg-[#3c7499] text-white px-4 py-2 rounded-lg font-bold hover:bg-[#6da3c3] transition hover:scale-103">
             + Crear Cupón
           </button>
+          <Link to="/gestionempleado">
+            <i className="fa-solid fa-users text-white text-3xl hover:scale-130 transition cursor-pointer"></i>
+          </Link>
+          <Link to="/">
+            <button>
+            <i class="fa-solid fa-arrow-right-from-bracket text-white text-3xl hover:scale-130 transition cursor-pointer"></i>
+            </button>
+          </Link>
         </div>
       </header>
       
@@ -93,7 +98,7 @@ function EmpresaDashboard() {
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-2 p-1 rounded-lg place-items-center">
           {cupones.map((cupon) => (
             <div key={cupon.id} 
-              className="cupon bg-[#c0c8cf] rounded-lg shadow p-4 text-center mb-7 w-72  flex flex-col items-center justify-center">
+              className="cupon bg-[#c0c8cf] rounded-lg shadow p-4 text-center mb-7 w-72 h-103 flex flex-col items-center justify-center">
               <h3 className="monse text-lg font-extrabold text-[#1d3557] mb-2 uppercase">{cupon.titulo}</h3>
               <img src={cupon.imagenURL} alt={cupon.titulo} width="100" className="w-auto h-35 mb-3 mx-auto block" />
               <p className="mb-2 text-gray-700">{cupon.descripcion}</p>
@@ -167,6 +172,7 @@ function EmpresaDashboard() {
                     <option value="diversión">Diversión</option>
                     <option value="tecnología">Tecnología</option>
                     <option value="comida">Comida</option>
+                    <option value="belleza">Belleza</option>
                   </select>
                   {formik.touched.rubro && formik.errors.rubro && (
                     <p className="text-red-500 text-xs mt-1">{formik.errors.rubro}</p>

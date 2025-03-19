@@ -117,6 +117,11 @@ function CuponDetail() {
             <i className="fa-solid fa-user text-white text-3xl hover:scale-130 transition cursor-pointer"></i>
             {modal && <Perfil modal={modal} toggleModal={toggleModal}/>}
           </button>
+          <Link to="/">
+            <button>
+            <i class="fa-solid fa-arrow-right-from-bracket text-white text-3xl hover:scale-130 transition cursor-pointer"></i>
+            </button>
+          </Link>
         </div>
       </header>
 
