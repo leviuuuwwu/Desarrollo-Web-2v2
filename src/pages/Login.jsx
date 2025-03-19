@@ -5,8 +5,7 @@ import {
   createUserWithEmailAndPassword, 
   signInWithEmailAndPassword, 
   setPersistence, 
-  browserSessionPersistence, 
-  signOut 
+  browserSessionPersistence 
 } from "firebase/auth";
 import { doc, setDoc, getDoc } from "firebase/firestore";
 
@@ -21,13 +20,12 @@ function Login() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    signOut(auth);
+    // Configura persistencia de sesión
     setPersistence(auth, browserSessionPersistence).catch((error) => {
       console.error("Error al configurar persistencia:", error);
     });
-  }, []);
 
-  useEffect(() => {
+    // Escucha cambios en la autenticación
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
       if (user) {
         const userRef = doc(db, "users", user.uid);
@@ -37,12 +35,18 @@ function Login() {
           const userData = userDoc.data();
           setUser(userData);
 
-          if (userData.role === "admin") {
-            navigate("/admin");
-          } else if (userData.role === "empresa") {
-            navigate("/empresa");
-          } else {
-            navigate("/cliente");
+          switch (userData.role) {
+            case "admin":
+              navigate("/admin");
+              break;
+            case "empresa":
+              navigate("/empresa");
+              break;
+            case "trabajador":
+              navigate("/trabajador");
+              break;
+            default:
+              navigate("/cliente");
           }
         }
       } else {
@@ -53,11 +57,12 @@ function Login() {
     return () => unsubscribe();
   }, [navigate]);
 
+  // Registro de usuario
   const registerUser = async (e) => {
     e.preventDefault();
 
     if (password !== confirmPassword) {
-      alert("Las contraseñas no coinciden");
+      alert("⚠️ Las contraseñas no coinciden");
       return;
     }
 
@@ -75,9 +80,11 @@ function Login() {
       navigate("/cliente"); 
     } catch (error) {
       console.error("Error al registrar usuario:", error);
+      alert("❌ Error al registrarse. Intenta de nuevo.");
     }
   };
 
+  // Inicio de sesión
   const signInUser = async (e) => {
     e.preventDefault();
     try {
@@ -90,16 +97,25 @@ function Login() {
       if (userDoc.exists()) {
         const userData = userDoc.data();
 
-        if (userData.role === "admin") {
-          navigate("/admin");
-        } else if (userData.role === "empresa") {
-          navigate("/empresa");
-        } else {
-          navigate("/cliente");
+        switch (userData.role) {
+          case "admin":
+            navigate("/admin");
+            break;
+          case "empresa":
+            navigate("/empresa");
+            break;
+          case "trabajador":
+            navigate("/trabajador");
+            break;
+          default:
+            navigate("/cliente");
         }
+      } else {
+        alert("⚠️ No se encontraron datos de usuario.");
       }
     } catch (error) {
       console.error("Error al iniciar sesión:", error);
+      alert("❌ Correo o contraseña incorrectos. Intenta de nuevo.");
     }
   };
 

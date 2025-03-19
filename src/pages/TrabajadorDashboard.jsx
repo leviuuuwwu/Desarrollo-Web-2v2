@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { db, auth } from "../firebase/config";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { collection, query, where, getDocs, doc, getDoc, updateDoc } from "firebase/firestore";
 
-function TrabajadroDashboard() {
+function TrabajadorDashboard() {
   const [codigo, setCodigo] = useState("");
   const [cupon, setCupon] = useState(null);
   const [error, setError] = useState("");
@@ -20,7 +20,7 @@ function TrabajadroDashboard() {
     setCupon(null);
 
     try {
-      // Obtener el usuario actual (trabajador)
+      // Obtener el usuario autenticado (trabajador)
       const user = auth.currentUser;
       if (!user) {
         setError("No hay un usuario autenticado.");
@@ -37,33 +37,45 @@ function TrabajadroDashboard() {
       }
 
       const userData = userDoc.data();
-      if (!userData.empresaId) {
+      if (!userData.idEmpresa) {
         setError("El trabajador no tiene una empresa asociada.");
         setLoading(false);
         return;
       }
 
-      // Buscar el cupón en la colección de cupones
-      const cuponesSnap = await getDoc(doc(db, "cupones", codigo));
-      if (!cuponesSnap.exists()) {
-        setError("Cupón no encontrado.");
+      // Buscar en todos los usuarios con rol "cliente"
+      const clientesQuery = query(collection(db, "users"), where("role", "==", "cliente"));
+      const clientesSnapshot = await getDocs(clientesQuery);
+
+      let cuponEncontrado = null;
+      let clienteId = null;
+
+      for (const clienteDoc of clientesSnapshot.docs) {
+        const clienteData = clienteDoc.data();
+        const cuponesComprados = clienteData.cuponesComprados || [];
+
+        const cuponBuscado = cuponesComprados.find((c) => c.codigo === codigo);
+
+        if (cuponBuscado) {
+          // Validar si el cupón pertenece a la misma empresa del trabajador
+          if (cuponBuscado.idEmpresa === userData.idEmpresa) {
+            cuponEncontrado = cuponBuscado;
+            clienteId = clienteDoc.id;
+            break; // Detener la búsqueda al encontrar el cupón válido
+          }
+        }
+      }
+
+      if (!cuponEncontrado) {
+        setError("Cupón no encontrado o no pertenece a tu empresa.");
         setLoading(false);
         return;
       }
 
-      const cuponData = cuponesSnap.data();
-
-      // Verificar si el cupón pertenece a la empresa del trabajador
-      if (cuponData.idVendedor !== userData.empresaId) {
-        setError("No tienes permiso para canjear este cupón.");
-        setLoading(false);
-        return;
-      }
-
-      // Mostrar los detalles del cupón
+      // Mostrar los detalles del cupón encontrado
       setCupon({
-        id: cuponesSnap.id,
-        ...cuponData,
+        ...cuponEncontrado,
+        clienteId,
       });
 
     } catch (error) {
@@ -79,17 +91,31 @@ function TrabajadroDashboard() {
     if (!cupon) return;
 
     try {
-      await updateDoc(doc(db, "cupones", cupon.id), {
-        redimido: true,
+      // Actualizar el estado del cupón en la lista de cuponesComprados del cliente
+      const clienteRef = doc(db, "users", cupon.clienteId);
+      const clienteDoc = await getDoc(clienteRef);
+
+      if (!clienteDoc.exists()) {
+        setError("El cliente no existe en la base de datos.");
+        return;
+      }
+
+      const clienteData = clienteDoc.data();
+      const cuponesActualizados = clienteData.cuponesComprados.map((c) =>
+        c.codigo === cupon.codigo ? { ...c, redimido: true } : c
+      );
+
+      await updateDoc(clienteRef, {
+        cuponesComprados: cuponesActualizados,
       });
 
       setError("");
-      alert("Cupón redimido con éxito.");
+      alert("✅ Cupón redimido con éxito.");
       setCupon(null);
       setCodigo("");
     } catch (error) {
       console.error("Error al redimir el cupón:", error);
-      setError("No se pudo redimir el cupón.");
+      setError("❌ No se pudo redimir el cupón.");
     }
   };
 
@@ -113,7 +139,7 @@ function TrabajadroDashboard() {
         </button>
       </div>
 
-      {loading && <p className="text-center">Buscando cupón...</p>}
+      {loading && <p className="text-center">🔄 Buscando cupón...</p>}
       {error && <p className="text-center text-red-600">{error}</p>}
 
       {cupon && (
@@ -131,7 +157,7 @@ function TrabajadroDashboard() {
             onClick={redimirCupon}
             className="mt-4 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700"
           >
-            Redimir Cupón
+            ✅ Redimir Cupón
           </button>
         </div>
       )}
@@ -139,4 +165,4 @@ function TrabajadroDashboard() {
   );
 }
 
-export default TrabajadroDashboard;
+export default TrabajadorDashboard;
