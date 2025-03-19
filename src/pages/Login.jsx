@@ -37,7 +37,7 @@ function Login() {
 
           switch (userData.role) {
             case "admin":
-              navigate("/admin");
+              navigate("/administrador");
               break;
             case "empresa":
               navigate("/empresa");
