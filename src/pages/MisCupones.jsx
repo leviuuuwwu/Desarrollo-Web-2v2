@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { auth, db } from "../firebase/config";
 import { doc, getDoc } from "firebase/firestore";
 import { Link } from "react-router-dom"; 
-import Perfil from "../components/modalPerfil";
+import Perfil from "../components/ModalPerfil";
 
 function MisCupones() {
   const [cuponesComprados, setCuponesComprados] = useState([]);
@@ -74,17 +74,17 @@ function MisCupones() {
       <section className="pt-24 px-28">
         <h1 className="text-2xl font-semibold text-center mb-3 monse">Mis Cupones</h1>
         {cuponesComprados.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 p-1 rounded-lg place-items-center">
+          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-2 p-1 rounded-lg place-items-center">
             {cuponesComprados.map((cupon, index) => (
               <div key={index} 
-                className="bg-[#d9d9d9] rounded-lg shadow p-4 text-center max-w-xs mx-auto mb-5">
-                <h2 className="text-xl font-extrabold text-[#1d3557] mb-2 uppercase">{cupon.titulo || "Título no disponible"}</h2>
+                className="bg-[#c0c8cf] rounded-lg shadow p-4 text-center mb-7 w-72 h-103 flex flex-col items-center justify-center">
+                <h2 className="monse text-xl font-extrabold text-[#1d3557] mb-2 uppercase">{cupon.titulo || "Título no disponible"}</h2>
 
                 {cupon.imagenURL ? (
                   <img 
                     src={cupon.imagenURL} 
                     alt={cupon.titulo || "Cupón"} 
-                    className="w-50 h-auto mb-3 mx-auto block"
+                    className="w-auto h-35 mb-3 mx-auto block"
                   />
                 ) : (
                   <p className="text-gray-500">Imagen no disponible</p>

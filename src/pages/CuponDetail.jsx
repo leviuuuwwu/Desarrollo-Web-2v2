@@ -4,7 +4,7 @@ import { doc, getDoc, updateDoc, arrayUnion } from "firebase/firestore";
 import { db, auth } from "../firebase/config";
 import { v4 as uuidv4 } from "uuid";
 import { Link } from "react-router-dom";
-import Perfil from "../components/modalPerfil";
+import Perfil from "../components/ModalPerfil";
 
 function CuponDetail() {
   const { id } = useParams();
@@ -121,9 +121,9 @@ function CuponDetail() {
       </header>
 
       <section className="pt-28 px-28 flex justify-center">
-        <div className="bg-[#d9d9d9] rounded-lg shadow p-4 text-center">
-          <h1 className="text-xl font-extrabold text-[#1d3557] mb-2 uppercase">{cupon.titulo}</h1>
-          <img src={cupon.imagenURL} alt={cupon.titulo} className="w-40 mb-3 mx-auto block" />
+        <div className="bg-[#c0c8cf] rounded-lg shadow p-4 text-center mb-7 w-72 h-103 flex flex-col items-center justify-center">
+          <h1 className="text-lg font-extrabold text-[#1d3557] mb-2 uppercase">{cupon.titulo}</h1>
+          <img src={cupon.imagenURL} alt={cupon.titulo} className="w-auto h-35 mb-3 mx-auto block" />
           <p className="mb-2 text-gray-700">{cupon.descripcion}</p>
           <div className="text-left ml-3">
           <p><strong>Precio Oferta:</strong> ${cupon.precioOferta}</p>
@@ -146,10 +146,10 @@ function CuponDetail() {
           <div className="modal bg-white p-8 rounded-lg shadow-lg w-96">
             <h2 className="text-center text-xl font-semibold text-[#1d3557] monse mb-3">Ingrese los datos de su tarjeta</h2>
             <div className="space-y-2">
-            <input type="text" name="numeroTarjeta" placeholder="Número de tarjeta" className="w-full p-2 border border-gray-300 rounded-lg" onChange={handleInputChange} />
-            <input type="text" name="nombreTarjeta" placeholder="Nombre en la tarjeta" className="w-full p-2 border border-gray-300 rounded-lg" onChange={handleInputChange} />
-            <input type="text" name="fechaExpiracion" placeholder="Fecha de expiración (MM/AA)" className="w-full p-2 border border-gray-300 rounded-lg" onChange={handleInputChange} />
-            <input type="text" name="codigoSeguridad" placeholder="Código de seguridad" className="w-full p-2 border border-gray-300 rounded-lg" onChange={handleInputChange} />
+              <input type="text" name="numeroTarjeta" placeholder="Número de tarjeta" className="w-full p-2 border border-gray-300 rounded-lg" onChange={handleInputChange} />
+              <input type="text" name="nombreTarjeta" placeholder="Nombre en la tarjeta" className="w-full p-2 border border-gray-300 rounded-lg" onChange={handleInputChange} />
+              <input type="text" name="fechaExpiracion" placeholder="Fecha de expiración (MM/AA)" className="w-full p-2 border border-gray-300 rounded-lg" onChange={handleInputChange} />
+              <input type="text" name="codigoSeguridad" placeholder="Código de seguridad" className="w-full p-2 border border-gray-300 rounded-lg" onChange={handleInputChange} />
             </div>
             <div className="flex items-center mt-4 gap-2">
               <button onClick={() => setShowPaymentModal(false)} className="bg-[#ff2323] text-white font-bold py-2 px-4 rounded-lg hover:bg-[#ff5757] w-full transition hover:scale-103">Cancelar</button>

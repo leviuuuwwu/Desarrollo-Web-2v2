@@ -8,7 +8,7 @@ import TrabajadorDashboard from "./pages/TrabajadorDashboard"; // Importamos la 
 import PrivateRoute from "./components/PrivateRoute";
 import CuponDetail from "./pages/CuponDetail";
 import MisCupones from "./pages/MisCupones";
-import Perfil from "./components/modalPerfil";
+import Perfil from "./components/ModalPerfil";
 
 function App() {
   return (

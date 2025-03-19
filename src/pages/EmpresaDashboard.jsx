@@ -93,9 +93,9 @@ function EmpresaDashboard() {
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-2 p-1 rounded-lg place-items-center">
           {cupones.map((cupon) => (
             <div key={cupon.id} 
-              className="cupon bg-[#d9d9d9] rounded-lg shadow p-4 text-center max-w-xs mx-auto mb-5">
-              <h3 className="text-xl font-extrabold text-[#1d3557] mb-2 uppercase">{cupon.titulo}</h3>
-              <img src={cupon.imagenURL} alt={cupon.titulo} width="100" className="w-40 mb-3 mx-auto block" />
+              className="cupon bg-[#c0c8cf] rounded-lg shadow p-4 text-center mb-7 w-72  flex flex-col items-center justify-center">
+              <h3 className="monse text-lg font-extrabold text-[#1d3557] mb-2 uppercase">{cupon.titulo}</h3>
+              <img src={cupon.imagenURL} alt={cupon.titulo} width="100" className="w-auto h-35 mb-3 mx-auto block" />
               <p className="mb-2 text-gray-700">{cupon.descripcion}</p>
               <div className="text-justify px-4 mb-2">
                   <h3><strong>Cantidad Disponible:</strong> {cupon.cantidadDisp}</h3>
@@ -164,8 +164,8 @@ function EmpresaDashboard() {
                     className="w-full border border-gray-300 p-1 rounded-md"
                   >
                     <option value="">Selecciona un rubro</option>
-                    <option value="diversion">Diversión</option>
-                    <option value="tecnologia">Tecnología</option>
+                    <option value="diversión">Diversión</option>
+                    <option value="tecnología">Tecnología</option>
                     <option value="comida">Comida</option>
                   </select>
                   {formik.touched.rubro && formik.errors.rubro && (
