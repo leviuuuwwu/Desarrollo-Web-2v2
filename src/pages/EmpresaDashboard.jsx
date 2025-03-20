@@ -58,7 +58,7 @@ function EmpresaDashboard() {
       const nuevoCupon = {
         ...values,
         idVendedor: empresaId,
-        estado: "activo",
+        estado: "pendiente",
       };
 
       try {
@@ -107,7 +107,7 @@ function EmpresaDashboard() {
                   <p><strong>Precio Regular:</strong> ${cupon.precioRegular}</p>
                   <p><strong>Precio Oferta:</strong> ${cupon.precioOferta}</p>
               </div>
-              <span className="text-white font-semibold ml-2 px-2 py-1 rounded-lg bg-[#00f263]">{cupon.estado}</span>
+              <span className="text-white font-semibold ml-2 px-2 py-1 rounded-lg bg-[#ff7837]">{cupon.estado}</span>
             </div>
           ))}
         </div>
