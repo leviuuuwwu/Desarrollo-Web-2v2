@@ -11,12 +11,10 @@ const PrivateRoute = ({ allowedRoles }) => {
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
       if (user) {
-        console.log("Usuario autenticado:", user.uid);
         const userRef = doc(db, "users", user.uid);
         const userDoc = await getDoc(userRef);
 
         if (userDoc.exists()) {
-          console.log("Rol obtenido desde Firestore:", userDoc.data().role);
           setUserRole(userDoc.data().role);
         }
       }
@@ -26,20 +24,14 @@ const PrivateRoute = ({ allowedRoles }) => {
     return () => unsubscribe();
   }, []);
 
-  console.log("Estado actual:", { loading, userRole });
-
-  // No mostrar nada hasta que loading sea false
   if (loading) {
     return <p>Cargando...</p>;
   }
 
-  // Si el usuario no tiene el rol adecuado, lo mandamos a login
   if (!userRole || !allowedRoles.includes(userRole)) {
-    console.log("Acceso denegado. Redirigiendo a /login");
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  // Si todo está bien, renderiza la ruta protegida
   return <Outlet />;
 };
 

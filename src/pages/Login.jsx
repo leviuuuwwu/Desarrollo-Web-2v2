@@ -20,12 +20,8 @@ function Login() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Configura persistencia de sesión
-    setPersistence(auth, browserSessionPersistence).catch((error) => {
-      console.error("Error al configurar persistencia:", error);
-    });
+    setPersistence(auth, browserSessionPersistence).catch(() => {});
 
-    // Escucha cambios en la autenticación
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
       if (user) {
         const userRef = doc(db, "users", user.uid);
@@ -57,7 +53,6 @@ function Login() {
     return () => unsubscribe();
   }, [navigate]);
 
-  // Registro de usuario
   const registerUser = async (e) => {
     e.preventDefault();
 
@@ -79,12 +74,10 @@ function Login() {
 
       navigate("/cliente"); 
     } catch (error) {
-      console.error("Error al registrar usuario:", error);
       alert("Error al registrarse. Intenta de nuevo.");
     }
   };
 
-  // Inicio de sesión
   const signInUser = async (e) => {
     e.preventDefault();
     try {
@@ -114,7 +107,6 @@ function Login() {
         alert("No se encontraron datos de usuario.");
       }
     } catch (error) {
-      console.error("Error al iniciar sesión:", error);
       alert("Correo o contraseña incorrectos. Intenta de nuevo.");
     }
   };
@@ -183,7 +175,7 @@ function Login() {
         </form>
 
         <p className="text-center mt-4">
-          {isRegistering ? "¿Ya tienes una cuenta?" : "¿No tienes cuenta?"}{" "}
+          {isRegistering ? "¿Ya tienes una cuenta?" : "¿No tienes cuenta?"} {" "}
           <span 
             onClick={() => setIsRegistering(!isRegistering)} 
             className="text-[#1d3557] font-bold cursor-pointer hover:underline"

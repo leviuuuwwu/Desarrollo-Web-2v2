@@ -12,8 +12,8 @@ function TrabajadorDashboard() {
   const [modal, setModal] = useState(false);
 
   const toggleModal = () => {
-    setModal(!modal)
-  }
+    setModal(!modal);
+  };
 
   // Función para buscar el cupón
   const buscarCupon = async () => {
@@ -27,7 +27,6 @@ function TrabajadorDashboard() {
     setCupon(null);
 
     try {
-      // Obtener el usuario autenticado (trabajador)
       const user = auth.currentUser;
       if (!user) {
         setError("No hay un usuario autenticado.");
@@ -35,7 +34,6 @@ function TrabajadorDashboard() {
         return;
       }
 
-      // Obtener la empresa del trabajador
       const userDoc = await getDoc(doc(db, "users", user.uid));
       if (!userDoc.exists()) {
         setError("El usuario no existe en la base de datos.");
@@ -50,7 +48,6 @@ function TrabajadorDashboard() {
         return;
       }
 
-      // Buscar en todos los usuarios con rol "cliente"
       const clientesQuery = query(collection(db, "users"), where("role", "==", "cliente"));
       const clientesSnapshot = await getDocs(clientesQuery);
 
@@ -63,13 +60,10 @@ function TrabajadorDashboard() {
 
         const cuponBuscado = cuponesComprados.find((c) => c.codigo === codigo);
 
-        if (cuponBuscado) {
-          // Validar si el cupón pertenece a la misma empresa del trabajador
-          if (cuponBuscado.idEmpresa === userData.idEmpresa) {
-            cuponEncontrado = cuponBuscado;
-            clienteId = clienteDoc.id;
-            break; // Detener la búsqueda al encontrar el cupón válido
-          }
+        if (cuponBuscado && cuponBuscado.idEmpresa === userData.idEmpresa) {
+          cuponEncontrado = cuponBuscado;
+          clienteId = clienteDoc.id;
+          break;
         }
       }
 
@@ -79,14 +73,12 @@ function TrabajadorDashboard() {
         return;
       }
 
-      // Mostrar los detalles del cupón encontrado
       setCupon({
         ...cuponEncontrado,
         clienteId,
       });
 
     } catch (error) {
-      console.error("Error al buscar el cupón:", error);
       setError("Hubo un error al buscar el cupón.");
     } finally {
       setLoading(false);
@@ -98,7 +90,6 @@ function TrabajadorDashboard() {
     if (!cupon) return;
 
     try {
-      // Actualizar el estado del cupón en la lista de cuponesComprados del cliente
       const clienteRef = doc(db, "users", cupon.clienteId);
       const clienteDoc = await getDoc(clienteRef);
 
@@ -121,7 +112,6 @@ function TrabajadorDashboard() {
       setCupon(null);
       setCodigo("");
     } catch (error) {
-      console.error("Error al canjear el cupón:", error);
       setError("No se pudo redimir el cupón.");
     }
   };
@@ -137,7 +127,7 @@ function TrabajadorDashboard() {
           </button>
           <Link to="/">
             <button>
-            <i class="fa-solid fa-arrow-right-from-bracket text-white text-3xl hover:scale-130 transition cursor-pointer"></i>
+            <i className="fa-solid fa-arrow-right-from-bracket text-white text-3xl hover:scale-130 transition cursor-pointer"></i>
             </button>
           </Link>
         </div>
