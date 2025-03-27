@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, query, where } from "firebase/firestore";
 import { db, auth } from "../firebase/config";
 
 function LandingPage() {
@@ -9,7 +9,8 @@ function LandingPage() {
 
   useEffect(() => {
     const fetchCupones = async () => {
-      const querySnapshot = await getDocs(collection(db, "cupones"));
+      const q = query(collection(db, "cupones"), where("estado", "==", "aprobado"));
+      const querySnapshot = await getDocs(q);
       const cuponesData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       setCupones(cuponesData);
     };

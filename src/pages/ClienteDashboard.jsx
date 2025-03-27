@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "../firebase/config";
 import { Link } from "react-router-dom";
 import Perfil from "../components/ModalPerfil";
+import { signOut } from "firebase/auth";
+import { auth } from "../firebase/config"; 
 
 function ClienteDashboard() {
   const [cupones, setCupones] = useState([]);
@@ -15,14 +17,15 @@ function ClienteDashboard() {
         console.log("Intentando conectar a Firestore...");
         
         const cuponesRef = collection(db, "cupones");
-        const querySnapshot = await getDocs(cuponesRef);
-
+        const q = query(cuponesRef, where("estado", "==", "aprobado")); // Solo cupones aprobados
+        const querySnapshot = await getDocs(q);
+    
         if (querySnapshot.empty) {
-          console.warn("No hay cupones en la base de datos.");
+          console.warn("No hay cupones aprobados en la base de datos.");
         } else {
           console.log("Datos obtenidos de Firestore:", querySnapshot.docs.map(doc => doc.data()));
         }
-
+    
         const cuponesData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         setCupones(cuponesData);
       } catch (error) {
@@ -38,6 +41,16 @@ function ClienteDashboard() {
   const toggleModal = () => {
     setModal(!modal)
   }
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      console.log("Sesión cerrada con éxito.");
+    } catch (error) {
+      console.error("Error al cerrar sesión:", error);
+    }
+  };
+  
 
   useEffect(() => {
     console.log("Estado actualizado: cupones =", cupones);
@@ -60,9 +73,9 @@ function ClienteDashboard() {
             <i className="fa-solid fa-user text-white text-3xl hover:scale-130 transition cursor-pointer"></i>
              {modal && <Perfil modal={modal} toggleModal={toggleModal}/>}
           </button>
-          <Link to="/">
-            <button>
-            <i class="fa-solid fa-arrow-right-from-bracket text-white text-3xl hover:scale-130 transition cursor-pointer"></i>
+          <Link to="/landingpage">
+            <button onClick={handleLogout}>
+              <i className="fa-solid fa-arrow-right-from-bracket text-white text-3xl hover:scale-130 transition cursor-pointer"></i>
             </button>
           </Link>
         </div>
