@@ -17,7 +17,7 @@ function ClienteDashboard() {
         console.log("Intentando conectar a Firestore...");
         
         const cuponesRef = collection(db, "cupones");
-        const q = query(cuponesRef, where("estado", "==", "aprobado")); // Solo cupones aprobados
+        const q = query(cuponesRef, where("estado", "==", "aprobado"));
         const querySnapshot = await getDocs(q);
     
         if (querySnapshot.empty) {

@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Navigate } from "react-router-dom";
 import { auth, db } from "../firebase/config";
 import { 
   createUserWithEmailAndPassword, 
   signInWithEmailAndPassword, 
   setPersistence, 
-  browserSessionPersistence 
+  browserSessionPersistence, 
+  signOut 
 } from "firebase/auth";
 import { doc, setDoc, getDoc } from "firebase/firestore";
 
@@ -20,38 +21,47 @@ function Login() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    setPersistence(auth, browserSessionPersistence).catch(() => {});
-
-    const unsubscribe = auth.onAuthStateChanged(async (user) => {
-      if (user) {
-        const userRef = doc(db, "users", user.uid);
-        const userDoc = await getDoc(userRef);
-
-        if (userDoc.exists()) {
-          const userData = userDoc.data();
-          setUser(userData);
-
-          switch (userData.role) {
-            case "admin":
-              navigate("/administrador");
-              break;
-            case "empresa":
-              navigate("/empresa");
-              break;
-            case "trabajador":
-              navigate("/trabajador");
-              break;
-            default:
-              navigate("/cliente");
-          }
-        }
-      } else {
-        setUser(null);
+    const checkUser = async () => {
+      await setPersistence(auth, browserSessionPersistence).catch(() => {});
+      
+      const currentUser = auth.currentUser;
+      if (currentUser) {
+        await signOut(auth); // 🔴 Cierra sesión si hay una sesión activa
       }
-    });
 
-    return () => unsubscribe();
-  }, [navigate]);
+      const unsubscribe = auth.onAuthStateChanged(async (user) => {
+        if (user) {
+          const userRef = doc(db, "users", user.uid);
+          const userDoc = await getDoc(userRef);
+
+          if (userDoc.exists()) {
+            const userData = userDoc.data();
+            setUser(userData);
+          }
+        } else {
+          setUser(null);
+        }
+      });
+
+      return () => unsubscribe();
+    };
+
+    checkUser();
+  }, []);
+
+  // 🔄 Redirección automática si el usuario ya está autenticado
+  if (user) {
+    switch (user.role) {
+      case "admin":
+        return <Navigate to="/Administrador" replace />;
+      case "empresa":
+        return <Navigate to="/Empresa" replace />;
+      case "trabajador":
+        return <Navigate to="/Trabajador" replace />;
+      default:
+        return <Navigate to="/Cliente" replace />;
+    }
+  }
 
   const registerUser = async (e) => {
     e.preventDefault();
@@ -72,7 +82,7 @@ function Login() {
         role: "cliente",
       });
 
-      navigate("/cliente"); 
+      navigate("/cliente");
     } catch (error) {
       alert("Error al registrarse. Intenta de nuevo.");
     }
@@ -92,16 +102,16 @@ function Login() {
 
         switch (userData.role) {
           case "admin":
-            navigate("/admin");
+            navigate("/Administrador");
             break;
           case "empresa":
-            navigate("/empresa");
+            navigate("/Empresa");
             break;
           case "trabajador":
-            navigate("/trabajador");
+            navigate("/Trabajador");
             break;
           default:
-            navigate("/cliente");
+            navigate("/Cliente");
         }
       } else {
         alert("No se encontraron datos de usuario.");
@@ -115,7 +125,7 @@ function Login() {
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="bg-white p-8 rounded-lg shadow-lg w-96">
         <img src="/Logo.png" alt="logo" className="w-28 pb-5 mx-auto block" />
-        <h1 className="text-2xl font-bold text-center mb-4 monse ">
+        <h1 className="text-2xl font-bold text-center mb-4">
           {isRegistering ? "Regístrate" : "Iniciar Sesión"}
         </h1>
         <form onSubmit={isRegistering ? registerUser : signInUser} className="space-y-4">
@@ -175,7 +185,7 @@ function Login() {
         </form>
 
         <p className="text-center mt-4">
-          {isRegistering ? "¿Ya tienes una cuenta?" : "¿No tienes cuenta?"} {" "}
+          {isRegistering ? "¿Ya tienes una cuenta?" : "¿No tienes cuenta?"}{" "}
           <span 
             onClick={() => setIsRegistering(!isRegistering)} 
             className="text-[#1d3557] font-bold cursor-pointer hover:underline"
