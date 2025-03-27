@@ -8,14 +8,31 @@ import { Link } from "react-router-dom";
 function EmpresaDashboard() {
   const [cupones, setCupones] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
+  const getEstadoColor = (estado) => {
+    switch (estado) {
+      case "pendiente":
+        return "bg-orange-500"; // Naranja
+      case "aprobado":
+        return "bg-green-500"; // Verde
+      case "rechazado":
+        return "bg-red-500"; // Rojo
+      default:
+        return "bg-gray-500"; // Color por defecto
+    }
+  };
+  
 
   useEffect(() => {
     const obtenerCupones = async () => {
       const empresaId = auth.currentUser?.uid;
       if (!empresaId) return;
-      const q = query(collection(db, "cupones"), where("idEmpresa", "==", empresaId));
+      const q = query(collection(db, "cupones"), where("idVendedor", "==", empresaId));
       const querySnapshot = await getDocs(q);
-      setCupones(querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
+      setCupones(querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+        motivoRechazo: doc.data().motivoRechazo || "",
+      })));      
     };
 
     obtenerCupones();
@@ -58,8 +75,10 @@ function EmpresaDashboard() {
       const nuevoCupon = {
         ...values,
         idVendedor: empresaId,
-        estado: "pendiente",
+        estado: "pendiente", 
+        motivoRechazo: "", 
       };
+      
 
       try {
         const docRef = await addDoc(collection(db, "cupones"), nuevoCupon);
@@ -106,8 +125,11 @@ function EmpresaDashboard() {
                   <h3><strong>Cantidad Disponible:</strong> {cupon.cantidadDisp}</h3>
                   <p><strong>Precio Regular:</strong> ${cupon.precioRegular}</p>
                   <p><strong>Precio Oferta:</strong> ${cupon.precioOferta}</p>
+                  <p><strong>Motivo Rechazo:</strong> {cupon.motivoRechazo}</p>
               </div>
-              <span className="text-white font-semibold ml-2 px-2 py-1 rounded-lg bg-[#ff7837]">{cupon.estado}</span>
+              <span className={`text-white font-semibold px-2 py-1 rounded-lg ${getEstadoColor(cupon.estado)}`}>
+                  {cupon.estado}
+              </span>
             </div>
           ))}
         </div>
