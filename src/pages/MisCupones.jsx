@@ -3,6 +3,7 @@ import { auth, db } from "../firebase/config";
 import { doc, getDoc } from "firebase/firestore";
 import { Link } from "react-router-dom"; 
 import Perfil from "../components/ModalPerfil";
+import { signOut } from "firebase/auth";
 
 function MisCupones() {
   const [cuponesComprados, setCuponesComprados] = useState([]);
@@ -50,6 +51,15 @@ function MisCupones() {
     setModal(!modal);
   }
 
+  const handleLogout = async () => {
+      try {
+        await signOut(auth);
+        console.log("Sesión cerrada con éxito.");
+      } catch (error) {
+        console.error("Error al cerrar sesión:", error);
+      }
+    };
+
   if (loading) return <p className="text-center">Cargando cupones...</p>;
 
   return (
@@ -57,7 +67,7 @@ function MisCupones() {
       <header className="w-full bg-[#012E40] fixed py-4 px-20 flex items-center justify-between">
         <img src="/CM.png" alt="logo" className="w-60"/>
         <div className="flex space-x-10">
-          <Link to="/clientedashboard">
+          <Link to="/cliente">
             <i className="fa-solid fa-house text-white text-3xl hover:scale-130 transition cursor-pointer"></i>
           </Link>
           <Link to="/miscupones">
@@ -67,6 +77,11 @@ function MisCupones() {
             <i className="fa-solid fa-user text-white text-3xl hover:scale-130 transition cursor-pointer"></i>
             {modal && <Perfil modal={modal} toggleModal={toggleModal}/>}
           </button>
+          <Link to="/landingpage">
+            <button onClick={handleLogout}>
+              <i className="fa-solid fa-arrow-right-from-bracket text-white text-3xl hover:scale-130 transition cursor-pointer"></i>
+            </button>
+          </Link>
         </div>
       </header>
       

@@ -107,7 +107,7 @@ function CuponDetail() {
       <header className="w-full bg-[#012E40] fixed py-4 px-20 flex items-center justify-between">
         <img src="/CM.png" alt="logo" className="w-60" />
         <div className="flex space-x-10">
-          <Link to="/clientedashboard">
+          <Link to="/cliente">
             <i className="fa-solid fa-house text-white text-3xl hover:scale-130 transition cursor-pointer"></i>
           </Link>
           <Link to="/miscupones">
@@ -126,7 +126,7 @@ function CuponDetail() {
       </header>
 
       <section className="pt-28 px-28 flex justify-center">
-        <div className="bg-[#c0c8cf] rounded-lg shadow p-4 text-center mb-7 w-72 h-103 flex flex-col items-center justify-center">
+        <div className="bg-[#c0c8cf] rounded-lg shadow p-4 text-center mb-7 w-80 h-auto flex flex-col items-center justify-center">
           <h1 className="text-lg font-extrabold text-[#1d3557] mb-2 uppercase">{cupon.titulo}</h1>
           <img src={cupon.imagenURL} alt={cupon.titulo} className="w-auto h-35 mb-3 mx-auto block" />
           <p className="mb-2 text-gray-700">{cupon.descripcion}</p>
