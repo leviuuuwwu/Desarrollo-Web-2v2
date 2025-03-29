@@ -5,6 +5,7 @@ import { db, auth } from "../firebase/config";
 import { v4 as uuidv4 } from "uuid";
 import { Link } from "react-router-dom";
 import Perfil from "../components/ModalPerfil";
+import { signOut } from "firebase/auth";
 
 function CuponDetail() {
   const { id } = useParams();
@@ -99,6 +100,15 @@ function CuponDetail() {
     }
   };
 
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      console.log("Sesión cerrada con éxito.");
+    } catch (error) {
+      console.error("Error al cerrar sesión:", error);
+    }
+  };
+
   if (loading) return <p>Cargando cupón...</p>;
   if (!cupon) return <p>No se encontró el cupón.</p>;
 
@@ -117,9 +127,9 @@ function CuponDetail() {
             <i className="fa-solid fa-user text-white text-3xl hover:scale-130 transition cursor-pointer"></i>
             {modal && <Perfil modal={modal} toggleModal={toggleModal}/>}
           </button>
-          <Link to="/">
-            <button>
-            <i class="fa-solid fa-arrow-right-from-bracket text-white text-3xl hover:scale-130 transition cursor-pointer"></i>
+          <Link to="/landingpage">
+            <button onClick={handleLogout}>
+              <i className="fa-solid fa-arrow-right-from-bracket text-white text-3xl hover:scale-130 transition cursor-pointer"></i>
             </button>
           </Link>
         </div>
