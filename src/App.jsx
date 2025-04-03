@@ -5,6 +5,8 @@ import ClienteDashboard from "./pages/ClienteDashboard";
 import EmpresaDashboard from "./pages/EmpresaDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
 import TrabajadorDashboard from "./pages/TrabajadorDashboard";
+import UsersDetail from "./pages/UsersDetail"; 
+import EmpresaDetail from "./pages/EmpresaDetail";
 import PrivateRoute from "./components/PrivateRoute";
 import CuponDetail from "./pages/CuponDetail";
 import MisCupones from "./pages/MisCupones";
@@ -39,6 +41,8 @@ function App() {
         {/* Rutas protegidas para ADMINISTRADORES */}
         <Route element={<PrivateRoute allowedRoles={["admin"]} />}>
           <Route path="/Administrador" element={<AdminDashboard />} />
+          <Route path="/ClientesDetail" element={<UsersDetail />} />
+          <Route path="/EmpresaDetail" element={<EmpresaDetail />} />
         </Route>
 
         {/* Redirigir a la página principal si la ruta no existe */}
