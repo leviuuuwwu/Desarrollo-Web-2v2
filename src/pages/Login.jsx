@@ -204,12 +204,6 @@ function Login() {
       {modal && (
         <div className="fixed inset-0 bg-gray-200 bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 w-96 shadow-lg relative">
-            <button 
-              onClick={() => setModal(false)} 
-              className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 text-xl font-bold"
-            >
-              &times;
-            </button>
             <h2 className="text-center text-xl font-semibold text-[#1d3557] monse mb-3">Registro de Empresas</h2>
             <form className="space-y-3">
               <input
