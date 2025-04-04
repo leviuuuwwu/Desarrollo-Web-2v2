@@ -226,11 +226,6 @@ function Login() {
                 placeholder="Correo electrónico"
                 className="w-full p-2 border border-gray-300 rounded-lg"
               />
-              <input
-                type="password"
-                placeholder="Contraseña"
-                className="w-full p-2 border border-gray-300 rounded-lg"
-              />
 
               <div className="flex items-center gap-2">
                 <button onClick={() => setModal(false)} className="bg-[#ff2323] text-white font-bold py-2 px-4 rounded-lg hover:bg-[#ff5757] w-full transition hover:scale-103">Cancelar</button>
