@@ -29,6 +29,7 @@ function Login() {
   const [ubicacionEmpresa, setUbicacionEmpresa] = useState("");
   const [emailEmpresa, setEmailEmpresa] = useState("");
   const [passwordEmpresa, setPasswordEmpresa] = useState("");
+  const [rubro, setRubro] = useState(""); // Estado para el rubro seleccionado
 
   useEffect(() => {
     const checkUser = async () => {
@@ -163,12 +164,16 @@ function Login() {
         nombreEmpresa,
         telefono: telefonoEmpresa,
         ubicacion: ubicacionEmpresa,
+        rubro, // Guardar el rubro seleccionado
         role: "empresa",
         estado: "pendiente",
       });
 
       alert("Solicitud enviada. Un administrador deberá aprobar tu cuenta.");
+      
+      // Después de registrar la empresa, redirigimos al login
       setModal(false);
+      navigate("/login"); // Redirige al login
 
       // Limpiar campos
       setNombreEmpresa("");
@@ -176,6 +181,7 @@ function Login() {
       setUbicacionEmpresa("");
       setEmailEmpresa("");
       setPasswordEmpresa("");
+      setRubro(""); // Limpiar el rubro después del registro
     } catch (error) {
       console.error("Error al registrar empresa:", error);
       alert("Error al registrar empresa. Intenta de nuevo.");
@@ -314,22 +320,22 @@ function Login() {
                 onChange={(e) => setPasswordEmpresa(e.target.value)}
                 className="w-full p-2 border border-gray-300 rounded-lg"
               />
-
-              <div className="flex items-center gap-2">
-                <button
-                  type="button"
-                  onClick={() => setModal(false)}
-                  className="bg-[#ff2323] text-white font-bold py-2 px-4 rounded-lg hover:bg-[#ff5757] w-full transition hover:scale-103"
-                >
-                  Cancelar
-                </button>
-                <button
-                  type="submit"
-                  className="bg-[#3C7499] text-white font-bold py-2 px-4 rounded-lg hover:bg-[#6da3c3] w-full transition hover:scale-103"
-                >
-                  Regístrate
-                </button>
-              </div>
+              <select
+                value={rubro}
+                onChange={(e) => setRubro(e.target.value)}
+                className="w-full p-2 border border-gray-300 rounded-lg"
+              >
+                <option value="">Selecciona el rubro de la empresa</option>
+                <option value="comida">Comida</option>
+                <option value="belleza">Belleza</option>
+                <option value="tecnología">Tecnología</option>
+              </select>
+              <button
+                type="submit"
+                className="w-full bg-[#3C7499] text-white p-2 rounded-lg hover:bg-[#6da3c3] transition font-bold hover:scale-103"
+              >
+                Registrar Empresa
+              </button>
             </form>
           </div>
         </div>
