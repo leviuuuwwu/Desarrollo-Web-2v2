@@ -2,9 +2,11 @@ import { useEffect, useState } from "react";
 import { db } from "../firebase/config";
 import { collection, getDocs, updateDoc, doc } from "firebase/firestore";
 import { Link } from "react-router-dom";
+import Perfil from "../components/ModalPerfil";
 
 function AdminDashboard() {
   const [cupones, setCupones] = useState([]);
+  const [modal, setModal] = useState(false);
 
   useEffect(() => {
     const fetchCupones = async () => {
@@ -34,6 +36,10 @@ function AdminDashboard() {
     setCupones(cupones.filter(cupon => cupon.id !== id));
   };
 
+  const toggleModal = () => {
+    setModal(!modal)
+  }
+
   return (
     <div>
       <header className="w-full bg-[#012E40] fixed py-4 px-20 flex items-center justify-between">
@@ -45,6 +51,10 @@ function AdminDashboard() {
           <Link to="/EmpresaDetail">
             <i className="fa-solid fa-building text-white text-3xl hover:scale-130 transition cursor-pointer"></i>
           </Link>
+          <button onClick={toggleModal} className="relative bg-transparent border-none outline-none">
+            <i className="fa-solid fa-user text-white text-3xl hover:scale-130 transition cursor-pointer"></i>
+              {modal && <Perfil modal={modal} toggleModal={toggleModal}/>}
+          </button>
           <Link to="/">
             <i className="fa-solid fa-arrow-right-from-bracket text-white text-3xl hover:scale-130 transition cursor-pointer"></i>
           </Link>
