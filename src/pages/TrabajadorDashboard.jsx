@@ -170,22 +170,22 @@ function TrabajadorDashboard() {
         <section className="p-6 flex justify-center items-center">
           <div className="bg-[#c0c8cf] rounded-lg shadow p-4 text-center mb-7 w-72 h-103 flex flex-col items-center justify-center">
           
-          <h2 className="monse text-lg font-extrabold text-[#1d3557] mb-2 uppercase">{cupon.titulo}</h2>
-          {cupon.imagenURL && (
-            <img src={cupon.imagenURL} alt={cupon.titulo} className="w-auto h-35 mb-3 mx-auto block" />
-          )}
-          <p className="mb-2 text-gray-700">{cupon.descripcion}</p>
-          <div className="text-justify px-4">
-            <p><strong>Detalles:</strong> {cupon.detalles || "No especificados"}</p>
-            <p><strong>Precio Oferta:</strong> ${cupon.precioOferta}</p>
-            <p><strong>Precio Regular:</strong> ${cupon.precioRegular}</p>
-          </div>
-          <button
-            onClick={redimirCupon}
-            className="bg-[#3C7499] text-white px-4 py-2 mt-3 rounded-lg font-semibold hover:bg-[#6da3c3] transition hover:scale-103"
-          >
-            Canjear Cupón
-          </button>
+            <h2 className="monse text-lg font-extrabold text-[#1d3557] mb-2 uppercase">{cupon.titulo}</h2>
+            {cupon.imagenURL && (
+              <img src={cupon.imagenURL} alt={cupon.titulo} className="w-auto h-35 mb-3 mx-auto block" />
+            )}
+            <p className="mb-2 text-gray-700">{cupon.descripcion}</p>
+            <div className="text-justify px-4">
+              <p><strong>Detalles:</strong> {cupon.detalles || "No especificados"}</p>
+              <p><strong>Precio Oferta:</strong> ${cupon.precioOferta || "No disponible"}</p> {/* Asegúrate de que estos campos existan */}
+              <p><strong>Precio Regular:</strong> ${cupon.precioRegular || "No disponible"}</p> {/* Asegúrate de que estos campos existan */}
+            </div>
+            <button
+              onClick={redimirCupon}
+              className="bg-[#3C7499] text-white px-4 py-2 mt-3 rounded-lg font-semibold hover:bg-[#6da3c3] transition hover:scale-103"
+            >
+              Canjear Cupón
+            </button>
           </div>
         </section>
       )}
