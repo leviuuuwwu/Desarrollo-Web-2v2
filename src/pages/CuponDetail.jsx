@@ -45,11 +45,19 @@ function CuponDetail() {
   }, [id]);
 
   const toggleModal = () => {
-    setModal(!modal)
-  }
+    setModal(!modal);
+  };
 
   const handleInputChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+    } catch (error) {
+      console.error("Error al cerrar sesión:", error);
+    }
   };
 
   const handlePayment = async () => {
@@ -57,44 +65,42 @@ function CuponDetail() {
       alert("Por favor, complete todos los campos.");
       return;
     }
-  
-    if (cupon.cantidadDisp <= 0) {
+
+    if (!cupon.cantidadDisp || cupon.cantidadDisp <= 0) {
       alert("Lo sentimos, este cupón ya no está disponible.");
       return;
     }
-  
+
     try {
       const cuponRef = doc(db, "cupones", id);
       await updateDoc(cuponRef, { cantidadDisp: cupon.cantidadDisp - 1 });
-  
+
       setCupon((prev) => ({ ...prev, cantidadDisp: prev.cantidadDisp - 1 }));
-  
+
       const user = auth.currentUser;
       if (user) {
         const userRef = doc(db, "users", user.uid);
-        const cuponUUID = uuidv4(); // Generamos el código único del cupón
-  
-        // Guardamos el cupón en el usuario con el código único y el idEmpresa
+        const cuponUUID = uuidv4();
+
         await updateDoc(userRef, {
           cuponesComprados: arrayUnion({
             codigo: cuponUUID,
             titulo: cupon.titulo,
             imagenURL: cupon.imagenURL,
             fechaCompra: new Date().toISOString(),
-            idEmpresa: cupon.idEmpresa, 
-            redimido: false, 
+            idEmpresa: cupon.idVendedor,
+            redimido: false,
           }),
         });
-  
-        // Enviamos el código a la empresa que vendió el cupón
-        const empresaRef = doc(db, "users", cupon.idEmpresa);
+
+        const empresaRef = doc(db, "users", cupon.idVendedor);
         await updateDoc(empresaRef, {
           cuponesVendidos: arrayUnion(cuponUUID),
         });
-  
+
         alert("Compra realizada con éxito. Tu código único es: " + cuponUUID);
       }
-  
+
       setShowPaymentModal(false);
     } catch (error) {
       console.error("Error al procesar la compra:", error);
@@ -118,7 +124,7 @@ function CuponDetail() {
           </Link>
           <button onClick={toggleModal} className="relative bg-transparent border-none outline-none">
             <i className="fa-solid fa-user text-white text-3xl hover:scale-130 transition cursor-pointer"></i>
-            {modal && <Perfil modal={modal} toggleModal={toggleModal}/>}
+            {modal && <Perfil modal={modal} toggleModal={toggleModal} />}
           </button>
           <Link to="/landingpage">
             <button onClick={handleLogout}>
@@ -134,10 +140,10 @@ function CuponDetail() {
           <img src={cupon.imagenURL} alt={cupon.titulo} className="w-auto h-35 mb-3 mx-auto block" />
           <p className="mb-2 text-gray-700">{cupon.descripcion}</p>
           <div className="text-left ml-3">
-          <p><strong>Precio Oferta:</strong> ${cupon.precioOferta}</p>
-          <p><strong>Precio Regular:</strong> ${cupon.precioRegular}</p>
-          <p><strong>Fecha Límite de Uso:</strong> {cupon.fechaLimiteUsar}</p>
-          <p><strong>Cantidad Disponible:</strong> {cupon.cantidadDisp}</p>
+            <p><strong>Precio Oferta:</strong> ${cupon.precioOferta}</p>
+            <p><strong>Precio Regular:</strong> ${cupon.precioRegular}</p>
+            <p><strong>Fecha Límite de Uso:</strong> {cupon.fechaLimiteUsar}</p>
+            <p><strong>Cantidad Disponible:</strong> {cupon.cantidadDisp}</p>
           </div>
 
           <button
