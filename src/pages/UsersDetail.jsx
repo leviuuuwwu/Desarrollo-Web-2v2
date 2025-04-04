@@ -33,6 +33,9 @@ export default function UsersDetail() {
       <header className="w-full bg-[#012E40] fixed py-4 px-20 flex items-center justify-between">
         <img src="/CM.png" alt="logo" className="w-60"/>
         <div className="flex gap-7">
+          <Link to="/Administrador">
+            <i className="fa-solid fa-house text-white text-3xl hover:scale-130 transition cursor-pointer"></i>
+          </Link>
           <Link to="/ClientesDetail">
             <i className="fa-solid fa-users text-white text-3xl hover:scale-130 transition cursor-pointer"></i>
           </Link>
@@ -75,7 +78,7 @@ export default function UsersDetail() {
           </tbody>
         </table>
         <div className="text-center mt-4">
-          <Link to="/AdminDashboard">
+          <Link to="/Administrador">
             <button className="bg-[#3C7499] text-white px-4 py-2 mt-3 rounded-lg font-semibold hover:bg-[#6da3c3] transition hover:scale-103">
               Volver al Panel
             </button>
