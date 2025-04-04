@@ -1,14 +1,16 @@
 import { useState, useEffect } from "react";
 import { useNavigate, Navigate } from "react-router-dom";
 import { auth, db } from "../firebase/config";
-import { 
-  createUserWithEmailAndPassword, 
-  signInWithEmailAndPassword, 
-  setPersistence, 
-  browserSessionPersistence, 
-  signOut 
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  setPersistence,
+  browserSessionPersistence,
+  signOut,
 } from "firebase/auth";
 import { doc, setDoc, getDoc } from "firebase/firestore";
+import { deleteUser } from "firebase/auth";
+import { deleteDoc } from "firebase/firestore";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -21,36 +23,43 @@ function Login() {
   const navigate = useNavigate();
   const [modal, setModal] = useState(false);
 
+  // Estados para empresa
+  const [nombreEmpresa, setNombreEmpresa] = useState("");
+  const [telefonoEmpresa, setTelefonoEmpresa] = useState("");
+  const [ubicacionEmpresa, setUbicacionEmpresa] = useState("");
+  const [emailEmpresa, setEmailEmpresa] = useState("");
+  const [passwordEmpresa, setPasswordEmpresa] = useState("");
+
   useEffect(() => {
     const checkUser = async () => {
       await setPersistence(auth, browserSessionPersistence).catch(() => {});
-      
+  
       const currentUser = auth.currentUser;
       if (currentUser) {
-        await signOut(auth); //Cierra sesión si hay una sesión activa
+        await signOut(auth);
       }
-
+  
       const unsubscribe = auth.onAuthStateChanged(async (user) => {
         if (user) {
           const userRef = doc(db, "users", user.uid);
           const userDoc = await getDoc(userRef);
-
+  
           if (userDoc.exists()) {
             const userData = userDoc.data();
+  
             setUser(userData);
           }
         } else {
           setUser(null);
         }
       });
-
+  
       return () => unsubscribe();
     };
-
+  
     checkUser();
-  }, []);
+  }, [navigate]); 
 
-  // Redirección automática si el usuario ya está autenticado
   if (user) {
     switch (user.role) {
       case "admin":
@@ -94,13 +103,33 @@ function Login() {
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
-
+  
       const userRef = doc(db, "users", user.uid);
       const userDoc = await getDoc(userRef);
-
+  
       if (userDoc.exists()) {
         const userData = userDoc.data();
-
+  
+        if (userData.role === "empresa") {
+          if (userData.estado === "pendiente") {
+            alert("Tu cuenta de empresa aún no ha sido aprobada por un administrador.");
+            await signOut(auth);
+            return;
+          }
+  
+          if (userData.estado === "rechazado") {
+            alert("Tu cuenta de empresa fue rechazada. Será eliminada.");
+  
+            // Eliminar documento en Firestore
+            await deleteDoc(userRef);
+  
+            // Eliminar usuario de auth
+            await deleteUser(user);
+  
+            return;
+          }
+        }
+  
         switch (userData.role) {
           case "admin":
             navigate("/Administrador");
@@ -119,6 +148,37 @@ function Login() {
       }
     } catch (error) {
       alert("Correo o contraseña incorrectos. Intenta de nuevo.");
+    }
+  };
+  
+  const registerEmpresa = async (e) => {
+    e.preventDefault();
+
+    try {
+      const cred = await createUserWithEmailAndPassword(auth, emailEmpresa, passwordEmpresa);
+      const user = cred.user;
+
+      await setDoc(doc(db, "users", user.uid), {
+        email: user.email,
+        nombreEmpresa,
+        telefono: telefonoEmpresa,
+        ubicacion: ubicacionEmpresa,
+        role: "empresa",
+        estado: "pendiente",
+      });
+
+      alert("Solicitud enviada. Un administrador deberá aprobar tu cuenta.");
+      setModal(false);
+
+      // Limpiar campos
+      setNombreEmpresa("");
+      setTelefonoEmpresa("");
+      setUbicacionEmpresa("");
+      setEmailEmpresa("");
+      setPasswordEmpresa("");
+    } catch (error) {
+      console.error("Error al registrar empresa:", error);
+      alert("Error al registrar empresa. Intenta de nuevo.");
     }
   };
 
@@ -178,8 +238,8 @@ function Login() {
                 className="w-full p-2 border border-gray-300 rounded-lg"
               />
             )}
-            <button 
-              type="submit" 
+            <button
+              type="submit"
               className="w-full bg-[#3C7499] text-white p-2 rounded-lg hover:bg-[#6da3c3] transition font-bold hover:scale-103"
             >
               {isRegistering ? "Registrarse" : "Iniciar Sesión"}
@@ -188,8 +248,8 @@ function Login() {
 
           <p className="text-center mt-4">
             {isRegistering ? "¿Ya tienes una cuenta?" : "¿No tienes cuenta?"}{" "}
-            <span 
-              onClick={() => setIsRegistering(!isRegistering)} 
+            <span
+              onClick={() => setIsRegistering(!isRegistering)}
               className="text-[#1d3557] font-bold cursor-pointer hover:underline"
             >
               {isRegistering ? "Inicia sesión" : "Regístrate"}
@@ -198,44 +258,82 @@ function Login() {
         </div>
       </div>
       <footer className="w-full bg-[#012E40] py-4 px-20 text-center">
-      <h3 className="text-center text-white cursor-pointer">¿Eres una empresa? <span onClick={() => setModal(true)} className="font-bold hover:underline">Regístrate</span></h3>
+        <h3 className="text-center text-white cursor-pointer">
+          ¿Eres una empresa?{" "}
+          <span onClick={() => setModal(true)} className="font-bold hover:underline">
+            Regístrate
+          </span>
+        </h3>
       </footer>
 
       {modal && (
         <div className="fixed inset-0 bg-gray-200 bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 w-96 shadow-lg relative">
-            <h2 className="text-center text-xl font-semibold text-[#1d3557] monse mb-3">Registro de Empresas</h2>
-            <form className="space-y-3">
+            <button
+              onClick={() => setModal(false)}
+              className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 text-xl font-bold"
+            >
+              &times;
+            </button>
+            <h2 className="text-center text-xl font-semibold text-[#1d3557] monse mb-3">
+              Registro de Empresas
+            </h2>
+            <form className="space-y-3" onSubmit={registerEmpresa}>
               <input
                 type="text"
                 placeholder="Nombre de la empresa"
+                value={nombreEmpresa}
+                onChange={(e) => setNombreEmpresa(e.target.value)}
                 className="w-full p-2 border border-gray-300 rounded-lg"
               />
               <input
                 type="tel"
                 placeholder="Teléfono"
+                value={telefonoEmpresa}
+                onChange={(e) => setTelefonoEmpresa(e.target.value)}
                 className="w-full p-2 border border-gray-300 rounded-lg"
               />
               <input
                 type="text"
                 placeholder="Ubicación"
+                value={ubicacionEmpresa}
+                onChange={(e) => setUbicacionEmpresa(e.target.value)}
                 className="w-full p-2 border border-gray-300 rounded-lg"
               />
               <input
                 type="email"
                 placeholder="Correo electrónico"
+                value={emailEmpresa}
+                onChange={(e) => setEmailEmpresa(e.target.value)}
+                className="w-full p-2 border border-gray-300 rounded-lg"
+              />
+              <input
+                type="password"
+                placeholder="Contraseña"
+                value={passwordEmpresa}
+                onChange={(e) => setPasswordEmpresa(e.target.value)}
                 className="w-full p-2 border border-gray-300 rounded-lg"
               />
 
               <div className="flex items-center gap-2">
-                <button onClick={() => setModal(false)} className="bg-[#ff2323] text-white font-bold py-2 px-4 rounded-lg hover:bg-[#ff5757] w-full transition hover:scale-103">Cancelar</button>
-                <button className="bg-[#3C7499] text-white font-bold py-2 px-4 rounded-lg hover:bg-[#6da3c3] w-full transition hover:scale-103">Regístrate</button>
+                <button
+                  type="button"
+                  onClick={() => setModal(false)}
+                  className="bg-[#ff2323] text-white font-bold py-2 px-4 rounded-lg hover:bg-[#ff5757] w-full transition hover:scale-103"
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="submit"
+                  className="bg-[#3C7499] text-white font-bold py-2 px-4 rounded-lg hover:bg-[#6da3c3] w-full transition hover:scale-103"
+                >
+                  Regístrate
+                </button>
               </div>
             </form>
           </div>
         </div>
-      )
-      }
+      )}
     </div>
   );
 }
