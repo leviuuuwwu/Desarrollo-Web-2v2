@@ -21,11 +21,11 @@ function TrabajadorDashboard() {
       setError("Por favor, ingresa un código de cupón.");
       return;
     }
-
+  
     setLoading(true);
     setError("");
     setCupon(null);
-
+  
     try {
       const user = auth.currentUser;
       if (!user) {
@@ -33,85 +33,98 @@ function TrabajadorDashboard() {
         setLoading(false);
         return;
       }
-
+  
       const userDoc = await getDoc(doc(db, "users", user.uid));
       if (!userDoc.exists()) {
         setError("El usuario no existe en la base de datos.");
         setLoading(false);
         return;
       }
-
+  
       const userData = userDoc.data();
       if (!userData.idEmpresa) {
         setError("El trabajador no tiene una empresa asociada.");
         setLoading(false);
         return;
       }
-
+  
       const clientesQuery = query(collection(db, "users"), where("role", "==", "cliente"));
       const clientesSnapshot = await getDocs(clientesQuery);
-
+  
       let cuponEncontrado = null;
       let clienteId = null;
-
+  
       for (const clienteDoc of clientesSnapshot.docs) {
         const clienteData = clienteDoc.data();
         const cuponesComprados = clienteData.cuponesComprados || [];
-
+  
         const cuponBuscado = cuponesComprados.find((c) => c.codigo === codigo);
-
-        if (cuponBuscado && cuponBuscado.idEmpresa === userData.idEmpresa) {
-          cuponEncontrado = cuponBuscado;
-          clienteId = clienteDoc.id;
-          break;
+  
+        if (cuponBuscado) {
+          if (cuponBuscado.idEmpresa === userData.idEmpresa) {
+            if (cuponBuscado.redimido) {
+              setError("Este cupón ya ha sido redimido.");
+              setLoading(false);
+              return;
+            }
+  
+            cuponEncontrado = cuponBuscado;
+            clienteId = clienteDoc.id;
+            break;
+          }
         }
       }
-
+  
       if (!cuponEncontrado) {
         setError("Cupón no encontrado o no pertenece a tu empresa.");
         setLoading(false);
         return;
       }
-
-      setCupon({
-        ...cuponEncontrado,
-        clienteId,
-      });
-
+  
+      setCupon({ ...cuponEncontrado, clienteId });
+  
     } catch (error) {
+      console.error("Error al buscar el cupón:", error);
       setError("Hubo un error al buscar el cupón.");
     } finally {
       setLoading(false);
     }
   };
-
-  // Función para redimir el cupón
+  
   const redimirCupon = async () => {
     if (!cupon) return;
-
+  
     try {
       const clienteRef = doc(db, "users", cupon.clienteId);
       const clienteDoc = await getDoc(clienteRef);
-
+  
       if (!clienteDoc.exists()) {
         setError("El cliente no existe en la base de datos.");
         return;
       }
-
+  
       const clienteData = clienteDoc.data();
+      const cuponActualizado = clienteData.cuponesComprados.find((c) => c.codigo === cupon.codigo);
+  
+      if (cuponActualizado.redimido) {
+        setError("Este cupón ya ha sido redimido.");
+        return;
+      }
+  
       const cuponesActualizados = clienteData.cuponesComprados.map((c) =>
         c.codigo === cupon.codigo ? { ...c, redimido: true } : c
       );
-
+  
       await updateDoc(clienteRef, {
         cuponesComprados: cuponesActualizados,
       });
-
+  
       setError("");
       alert("Cupón canjeado con éxito.");
       setCupon(null);
       setCodigo("");
     } catch (error) {
+      console.error("Error al canjear el cupón:", error);
       setError("No se pudo redimir el cupón.");
     }
   };

@@ -57,55 +57,48 @@ function CuponDetail() {
       alert("Por favor, complete todos los campos.");
       return;
     }
-
+  
     if (cupon.cantidadDisp <= 0) {
       alert("Lo sentimos, este cupón ya no está disponible.");
       return;
     }
-
+  
     try {
       const cuponRef = doc(db, "cupones", id);
       await updateDoc(cuponRef, { cantidadDisp: cupon.cantidadDisp - 1 });
-
+  
       setCupon((prev) => ({ ...prev, cantidadDisp: prev.cantidadDisp - 1 }));
-
+  
       const user = auth.currentUser;
       if (user) {
         const userRef = doc(db, "users", user.uid);
-        const cuponUUID = uuidv4(); // Generamos el número aleatorio único
-
-        // Guardamos el cupón en el usuario con el código único
+        const cuponUUID = uuidv4(); // Generamos el código único del cupón
+  
+        // Guardamos el cupón en el usuario con el código único y el idEmpresa
         await updateDoc(userRef, {
           cuponesComprados: arrayUnion({
             codigo: cuponUUID,
             titulo: cupon.titulo,
             imagenURL: cupon.imagenURL,
             fechaCompra: new Date().toISOString(),
+            idEmpresa: cupon.idEmpresa, 
+            redimido: false, 
           }),
         });
-
+  
         // Enviamos el código a la empresa que vendió el cupón
-        const empresaRef = doc(db, "users", cupon.idVendedor);
+        const empresaRef = doc(db, "users", cupon.idEmpresa);
         await updateDoc(empresaRef, {
           cuponesVendidos: arrayUnion(cuponUUID),
         });
-
+  
         alert("Compra realizada con éxito. Tu código único es: " + cuponUUID);
       }
-
+  
       setShowPaymentModal(false);
     } catch (error) {
       console.error("Error al procesar la compra:", error);
       alert("Hubo un problema al procesar la compra.");
-    }
-  };
-
-  const handleLogout = async () => {
-    try {
-      await signOut(auth);
-      console.log("Sesión cerrada con éxito.");
-    } catch (error) {
-      console.error("Error al cerrar sesión:", error);
     }
   };
 
