@@ -131,6 +131,9 @@ function EmpresaDashboard() {
           <Link to="/gestionempleado">
             <i className="fa-solid fa-users text-white text-3xl hover:scale-130 transition cursor-pointer"></i>
           </Link>
+          <Link to="/empresa">
+            <i className="fa-solid fa-house text-white text-3xl hover:scale-130 transition cursor-pointer"></i>
+          </Link>
           <button onClick={toggleModal} className="relative bg-transparent border-none outline-none">
             <i className="fa-solid fa-user text-white text-3xl hover:scale-130 transition cursor-pointer"></i>
               {modal && <Perfil modal={modal} toggleModal={toggleModal}/>}

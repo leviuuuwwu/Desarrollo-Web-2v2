@@ -116,6 +116,9 @@ function GestionEmpleado() {
           >
             + Añadir Trabajador
           </button>
+          <Link to="/gestionempleado">
+            <i className="fa-solid fa-users text-white text-3xl hover:scale-130 transition cursor-pointer"></i>
+          </Link>
           <Link to="/empresa">
             <i className="fa-solid fa-house text-white text-3xl hover:scale-130 transition cursor-pointer"></i>
           </Link>
@@ -123,6 +126,11 @@ function GestionEmpleado() {
             <i className="fa-solid fa-user text-white text-3xl hover:scale-130 transition cursor-pointer"></i>
             {modal && <Perfil modal={modal} toggleModal={toggleModal} />}
           </button>
+          <Link to="/">
+            <button>
+              <i className="fa-solid fa-arrow-right-from-bracket text-white text-3xl hover:scale-130 transition cursor-pointer"></i>
+            </button>
+          </Link>
         </div>
       </header>
 
@@ -177,13 +185,13 @@ function GestionEmpleado() {
                   <div className="flex justify-end gap-4 mt-3">
                     <button
                       onClick={() => handleEditar(trabajador)}
-                      className="text-sm text-blue-600 hover:underline"
+                      className="bg-[#3C7499] text-white text-md font-bold py-2 px-4 rounded-lg hover:bg-[#6da3c3] w-full transition hover:scale-103"
                     >
                       Editar
                     </button>
                     <button
                       onClick={() => handleEliminar(trabajador.id)}
-                      className="text-sm text-red-600 hover:underline"
+                      className="bg-[#ff2323] text-white text-md font-bold py-2 px-4 rounded-lg hover:bg-[#ff5757] w-full transition hover:scale-103"
                     >
                       Eliminar
                     </button>
@@ -196,11 +204,11 @@ function GestionEmpleado() {
       </main>
 
       {modalOpen && (
-        <div className="fixed inset-0 bg-gray-200 bg-opacity-50 flex justify-center items-center">
+        <div className="fixed inset-0 bg-gray-200 bg-opacity-50 flex justify-center items-center z-50">
           <div className="bg-white p-6 rounded shadow-lg w-96">
-            <h2 className="text-xl font-bold mb-4">Registrar Nuevo Trabajador</h2>
+            <h2 className="text-center text-xl font-semibold text-[#1d3557] monse mb-3">Registrar Nuevo Trabajador</h2>
             <form onSubmit={formik.handleSubmit} className="space-y-3">
-              {["fullName", "email", "phone"].map((name) => (
+              {["Nombre Completo", "Correo electrónico", "Teléfono"].map((name) => (
                 <div key={name}>
                   <input
                     type={name === "email" ? "email" : "text"}
@@ -209,24 +217,24 @@ function GestionEmpleado() {
                     value={formik.values[name]}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
-                    className="w-full p-2 border border-gray-300 rounded"
+                    className="w-full p-2 border border-gray-300 rounded-lg"
                   />
                   {formik.touched[name] && formik.errors[name] && (
                     <p className="text-red-500 text-sm">{formik.errors[name]}</p>
                   )}
                 </div>
               ))}
-              <div className="flex justify-between mt-4">
+              <div className="flex items-center gap-2">
                 <button
                   type="button"
                   onClick={() => setModalOpen(false)}
-                  className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+                  className="bg-[#ff2323] text-white font-bold py-2 px-4 rounded-lg hover:bg-[#ff5757] w-full transition hover:scale-103"
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
-                  className="bg-[#3c7499] text-white px-4 py-2 rounded hover:bg-[#6da3c3]"
+                  className="bg-[#3C7499] text-white font-bold py-2 px-4 rounded-lg hover:bg-[#6da3c3] w-full transition hover:scale-103"
                 >
                   Registrar
                 </button>
