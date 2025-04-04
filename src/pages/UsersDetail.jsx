@@ -2,9 +2,15 @@ import { useEffect, useState } from "react";
 import { db } from "../firebase/config";
 import { collection, getDocs, query, where } from "firebase/firestore"; // Importamos query y where
 import { Link } from "react-router-dom";
+import Perfil from "../components/ModalPerfil";
 
 export default function UsersDetail() {
   const [usuarios, setUsuarios] = useState([]);
+  const [modal, setModal] = useState(false);
+
+  const toggleModal = () => {
+    setModal(!modal)
+  }
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -33,6 +39,10 @@ export default function UsersDetail() {
           <Link to="/EmpresaDetail">
             <i className="fa-solid fa-building text-white text-3xl hover:scale-130 transition cursor-pointer"></i>
           </Link>
+          <button onClick={toggleModal} className="relative bg-transparent border-none outline-none">
+            <i className="fa-solid fa-user text-white text-3xl hover:scale-130 transition cursor-pointer"></i>
+              {modal && <Perfil modal={modal} toggleModal={toggleModal}/>}
+          </button>
           <Link to="/">
             <i className="fa-solid fa-arrow-right-from-bracket text-white text-3xl hover:scale-130 transition cursor-pointer"></i>
           </Link>
