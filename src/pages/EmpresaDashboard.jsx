@@ -101,7 +101,7 @@ function EmpresaDashboard() {
         idVendedor: empresaId,
         estado: "pendiente",
         motivoRechazo: "",
-        rubro: empresaRubro, // 🔥 Ahora sí, tomamos el rubro directamente del usuario autenticado
+        rubro: empresaRubro,
       };
     
       try {
@@ -192,9 +192,18 @@ function EmpresaDashboard() {
                 </div>
               ))}
 
-              <button type="submit" className="w-full text-white bg-[#3c7499] py-2 rounded-lg hover:bg-[#6da3c3] transition hover:scale-103 font-bold">
-                Guardar
-              </button>
+              <div className="flex items-center gap-2">
+                <button
+                    type="button"
+                    onClick={() => setModalOpen(false)}
+                    className="bg-[#ff2323] text-white font-bold py-2 px-4 rounded-lg hover:bg-[#ff5757] w-full transition hover:scale-103"
+                  >
+                    Cancelar
+                  </button>
+                <button type="submit" className="w-full text-white bg-[#3c7499] py-2 rounded-lg hover:bg-[#6da3c3] transition hover:scale-103 font-bold">
+                  Guardar
+                </button>
+              </div>
             </form>
           </div>
         </div>

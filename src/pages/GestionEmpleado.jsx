@@ -59,14 +59,14 @@ function GestionEmpleado() {
       if (!empresaId) return;
     
       try {
-        // 1. Crear usuario en Authentication
+        // crear usuario en Authentication
         const credenciales = await createUserWithEmailAndPassword(
           auth,
           values.email,
           values.password
         );
     
-        // 2. Guardar datos en Firestore
+        // guardar datos en Firestore
         await addDoc(collection(db, "users"), {
           fullName: values.fullName,
           email: values.email,
@@ -182,13 +182,13 @@ function GestionEmpleado() {
                   <div className="flex justify-end gap-2 mt-3">
                     <button
                       onClick={() => setEditandoId(null)}
-                      className="text-sm text-red-600 hover:underline"
+                      className="bg-[#ff2323] text-white text-md font-bold py-2 px-4 rounded-lg hover:bg-[#ff5757] w-full transition hover:scale-103"
                     >
                       Cancelar
                     </button>
                     <button
                       onClick={() => handleGuardarEdicion(trabajador.id)}
-                      className="text-sm text-blue-600 hover:underline"
+                      className="bg-[#3C7499] text-white text-md font-bold py-2 px-4 rounded-lg hover:bg-[#6da3c3] w-full transition hover:scale-103"
                     >
                       Guardar
                     </button>
