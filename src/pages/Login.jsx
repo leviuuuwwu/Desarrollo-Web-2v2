@@ -19,6 +19,7 @@ function Login() {
   const [isRegistering, setIsRegistering] = useState(false);
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
+  const [modal, setModal] = useState(false);
 
   useEffect(() => {
     const checkUser = async () => {
@@ -197,8 +198,56 @@ function Login() {
         </div>
       </div>
       <footer className="w-full bg-[#012E40] py-4 px-20 text-center">
-      <h3 className="text-center text-white">¿Eres una empresa? <span className="font-bold hover:underline">Regístrate</span></h3>
+      <h3 className="text-center text-white cursor-pointer">¿Eres una empresa? <span onClick={() => setModal(true)} className="font-bold hover:underline">Regístrate</span></h3>
       </footer>
+
+      {modal && (
+        <div className="fixed inset-0 bg-gray-200 bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 w-96 shadow-lg relative">
+            <button 
+              onClick={() => setModal(false)} 
+              className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 text-xl font-bold"
+            >
+              &times;
+            </button>
+            <h2 className="text-center text-xl font-semibold text-[#1d3557] monse mb-3">Registro de Empresas</h2>
+            <form className="space-y-3">
+              <input
+                type="text"
+                placeholder="Nombre de la empresa"
+                className="w-full p-2 border border-gray-300 rounded-lg"
+              />
+              <input
+                type="tel"
+                placeholder="Teléfono"
+                className="w-full p-2 border border-gray-300 rounded-lg"
+              />
+              <input
+                type="text"
+                placeholder="Ubicación"
+                className="w-full p-2 border border-gray-300 rounded-lg"
+              />
+              <input
+                type="email"
+                placeholder="Correo electrónico"
+                className="w-full p-2 border border-gray-300 rounded-lg"
+              />
+              <input
+                type="password"
+                placeholder="Contraseña"
+                className="w-full p-2 border border-gray-300 rounded-lg"
+              />
+
+              <div className="flex items-center gap-2">
+                <button onClick={() => setModal(false)} className="bg-[#ff2323] text-white font-bold py-2 px-4 rounded-lg hover:bg-[#ff5757] w-full transition hover:scale-103">Cancelar</button>
+                <button className="bg-[#3C7499] text-white font-bold py-2 px-4 rounded-lg hover:bg-[#6da3c3] w-full transition hover:scale-103">Regístrate</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )
+
+      }
     </div>
   );
 }
