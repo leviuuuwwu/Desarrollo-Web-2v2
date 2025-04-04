@@ -4,10 +4,12 @@ import { collection, addDoc, query, where, getDocs, doc, getDoc } from "firebase
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { Link } from "react-router-dom";
+import Perfil from "../components/ModalPerfil";
 
 function EmpresaDashboard() {
   const [cupones, setCupones] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
+  const [modal, setModal] = useState(false);
   const getEstadoColor = (estado) => {
     switch (estado) {
       case "pendiente":
@@ -114,6 +116,10 @@ function EmpresaDashboard() {
     },
   });
 
+  const toggleModal = () => {
+    setModal(!modal)
+  }
+
   return (
     <div className="bg-[#f5f5f5]">
       <header className="w-full bg-[#012E40] fixed py-4 px-20 flex items-center justify-between">
@@ -125,6 +131,10 @@ function EmpresaDashboard() {
           <Link to="/gestionempleado">
             <i className="fa-solid fa-users text-white text-3xl hover:scale-130 transition cursor-pointer"></i>
           </Link>
+          <button onClick={toggleModal} className="relative bg-transparent border-none outline-none">
+            <i className="fa-solid fa-user text-white text-3xl hover:scale-130 transition cursor-pointer"></i>
+              {modal && <Perfil modal={modal} toggleModal={toggleModal}/>}
+          </button>
           <Link to="/">
             <button>
               <i className="fa-solid fa-arrow-right-from-bracket text-white text-3xl hover:scale-130 transition cursor-pointer"></i>
