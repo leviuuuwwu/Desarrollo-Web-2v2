@@ -14,6 +14,8 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { Link } from "react-router-dom";
 import Perfil from "../components/ModalPerfil";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+
 
 function GestionEmpleado() {
   const [trabajadores, setTrabajadores] = useState([]);
@@ -45,6 +47,7 @@ function GestionEmpleado() {
       fullName: "",
       email: "",
       phone: "",
+      password: "",
     },
     validationSchema: Yup.object({
       fullName: Yup.string().required("Requerido"),
@@ -54,24 +57,35 @@ function GestionEmpleado() {
     onSubmit: async (values) => {
       const empresaId = auth.currentUser?.uid;
       if (!empresaId) return;
-
-      const nuevoTrabajador = {
-        ...values,
-        rol: "trabajador",
-        idEmpresa: empresaId,
-      };
-
+    
       try {
-        await addDoc(collection(db, "users"), nuevoTrabajador);
-        alert("Trabajador creado exitosamente.");
-        setModalOpen(false);
+        // 1. Crear usuario en Authentication
+        const credenciales = await createUserWithEmailAndPassword(
+          auth,
+          values.email,
+          values.password
+        );
+    
+        // 2. Guardar datos en Firestore
+        await addDoc(collection(db, "users"), {
+          fullName: values.fullName,
+          email: values.email,
+          phone: values.phone,
+          rol: "trabajador",
+          idEmpresa: empresaId,
+          uid: credenciales.user.uid,
+        });
+    
+        window.alert("Trabajador registrado con éxito.");
         formik.resetForm();
+        setModalOpen(false);
         obtenerTrabajadores();
       } catch (error) {
-        console.error("Error al crear trabajador:", error);
+        console.error("Error al registrar trabajador:", error.message);
+        window.alert("Ocurrió un error al registrar al trabajador.");
       }
     },
-  });
+    });
 
   const handleEditar = (trabajador) => {
     setEditandoId(trabajador.id);
@@ -104,6 +118,13 @@ function GestionEmpleado() {
   };
 
   const toggleModal = () => setModal(!modal);
+
+  const campos = [
+    { name: "fullName", label: "Nombre Completo" },
+    { name: "email", label: "Correo Electrónico" },
+    { name: "phone", label: "Teléfono" },
+    { name: "password", label: "Contraseña" },
+  ];
 
   return (
     <div className="bg-[#f5f5f5] min-h-screen">
@@ -208,12 +229,12 @@ function GestionEmpleado() {
           <div className="bg-white p-6 rounded shadow-lg w-96">
             <h2 className="text-center text-xl font-semibold text-[#1d3557] monse mb-3">Registrar Nuevo Trabajador</h2>
             <form onSubmit={formik.handleSubmit} className="space-y-3">
-              {["Nombre Completo", "Correo electrónico", "Teléfono"].map((name) => (
+              {campos.map(({ name, label }) => (
                 <div key={name}>
                   <input
                     type={name === "email" ? "email" : "text"}
                     name={name}
-                    placeholder={name.charAt(0).toUpperCase() + name.slice(1)}
+                    placeholder={label}
                     value={formik.values[name]}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
@@ -247,4 +268,4 @@ function GestionEmpleado() {
   );
 }
 
-export default GestionEmpleado; 
+export default GestionEmpleado;
