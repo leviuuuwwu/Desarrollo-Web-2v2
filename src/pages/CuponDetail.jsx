@@ -143,7 +143,6 @@ function CuponDetail() {
             <p><strong>Precio Oferta:</strong> ${cupon.precioOferta}</p>
             <p><strong>Precio Regular:</strong> ${cupon.precioRegular}</p>
             <p><strong>Fecha Límite de Uso:</strong> {cupon.fechaLimiteUsar}</p>
-            <p><strong>Cantidad Disponible:</strong> {cupon.cantidadDisp}</p>
           </div>
 
           <button

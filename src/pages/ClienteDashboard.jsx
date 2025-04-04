@@ -84,7 +84,7 @@ function ClienteDashboard() {
         
         {Object.keys(cuponesPorRubro).map((rubro) => (
           <div key={rubro} className="mb-10">
-            <h3 className="text-xl font-bold mb-4 text-[#012E40] uppercase border-b border-gray-300 pb-1">{rubro}</h3>
+            <h3 className="monse text-2xl font-bold mb-4 text-[#1d3557] uppercase border-b border-gray-300 pb-1">{rubro}</h3>
             <div className="cupones grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 p-1 rounded-lg place-items-center">
               {cuponesPorRubro[rubro].map((cupon) => (
                 <div 
