@@ -11,6 +11,7 @@ import PrivateRoute from "./components/PrivateRoute";
 import CuponDetail from "./pages/CuponDetail";
 import MisCupones from "./pages/MisCupones";
 import Perfil from "./components/ModalPerfil";
+import GestionEmpleado from "./pages/GestionEmpleado"; // 💥 NUEVA RUTA
 
 function App() {
   return (
@@ -36,6 +37,7 @@ function App() {
         {/* Rutas protegidas para EMPRESAS */}
         <Route element={<PrivateRoute allowedRoles={["empresa"]} />}>
           <Route path="/Empresa" element={<EmpresaDashboard />} />
+          <Route path="/GestionEmpleado" element={<GestionEmpleado />} /> {/* 💼 NUEVA RUTA */}
         </Route>
 
         {/* Rutas protegidas para ADMINISTRADORES */}
