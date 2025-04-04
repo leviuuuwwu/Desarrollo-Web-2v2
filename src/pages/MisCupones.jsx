@@ -92,33 +92,52 @@ function MisCupones() {
           <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-2 p-1 rounded-lg place-items-center">
             {cuponesComprados.map((cupon, index) => (
               <div key={index} 
-                className="bg-[#c0c8cf] rounded-lg shadow p-4 text-center mb-7 w-72 h-103 flex flex-col items-center justify-center">
-                <h2 className="monse text-xl font-extrabold text-[#1d3557] mb-2 uppercase">{cupon.titulo || "Título no disponible"}</h2>
-
-                {cupon.imagenURL ? (
-                  <img 
-                    src={cupon.imagenURL} 
-                    alt={cupon.titulo || "Cupón"} 
-                    className="w-auto h-35 mb-3 mx-auto block"
-                  />
-                ) : (
-                  <p className="text-gray-500">Imagen no disponible</p>
-                )}
-
-                <div className="text-justify px-4 mb-2">
-                  <p>
-                    <strong>Fecha de compra:</strong> {cupon.fechaCompra ? new Date(cupon.fechaCompra).toLocaleDateString() : "Fecha no disponible"}
-                  </p>
-
-                  {/* Levi arregla esto */}
-                  <p>
-                    <strong>Fecha de vencimiento:</strong> {cupon.fechaCompra ? new Date(cupon.fechaCompra).toLocaleDateString() : "Fecha no disponible"}
-                  </p>
-                  <p>
-                    <strong>Código del cupón:</strong> {cupon.codigo || "No disponible"}
-                  </p>
-                </div>
+              className="bg-[#c0c8cf] rounded-lg shadow p-4 text-center mb-7 w-72 h-103 flex flex-col items-center justify-center">
+              <h2 className="monse text-xl font-extrabold text-[#1d3557] mb-2 uppercase">{cupon.titulo || "Título no disponible"}</h2>
+            
+              {cupon.imagenURL ? (
+                <img 
+                  src={cupon.imagenURL} 
+                  alt={cupon.titulo || "Cupón"} 
+                  className="w-auto h-35 mb-3 mx-auto block"
+                />
+              ) : (
+                <p className="text-gray-500">Imagen no disponible</p>
+              )}
+              <div className="text-justify px-4 mb-2">
+                <p>
+                  <strong>Fecha de compra:</strong>{" "}
+                  {cupon.fechaCompra ? new Date(cupon.fechaCompra).toLocaleDateString() : "Fecha no disponible"}
+                </p>
+                <p>
+                  <strong>Fecha límite de uso:</strong>{" "}
+                  {cupon.fechaLimiteUsar ? new Date(cupon.fechaLimiteUsar).toLocaleDateString() : "Fecha no disponible"}
+                </p>
+                <p>
+                  <strong>Código del cupón:</strong> {cupon.codigo || "No disponible"}
+                </p>
+                <p>
+                  <strong>Estado:</strong>{" "}
+                  <span className={cupon.redimido ? "text-green-600 font-bold" : "text-red-600 font-bold"}>
+                    {cupon.redimido ? "Redimido" : "No redimido"}
+                  </span>
+                </p>
+                <p>
+                  <strong>Vencimiento:</strong>{" "}
+                  <span
+                    className={
+                      cupon.fechaLimiteUsar && new Date(cupon.fechaLimiteUsar) < new Date()
+                        ? "text-red-600 font-bold"
+                        : "text-green-600 font-bold"
+                    }
+                  >
+                    {cupon.fechaLimiteUsar && new Date(cupon.fechaLimiteUsar) < new Date()
+                      ? "Vencido"
+                      : "Vigente"}
+                  </span>
+                </p>
               </div>
+            </div>            
             ))}
           </div>
           

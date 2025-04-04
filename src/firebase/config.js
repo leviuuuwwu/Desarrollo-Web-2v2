@@ -2,7 +2,7 @@ import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } f
 import { getFirestore, setDoc,getDoc, doc } from "firebase/firestore";
 import { initializeApp } from "firebase/app";
 
-const firebaseConfig = {
+export const firebaseConfig = {
   apiKey: "AIzaSyDMFYlF1-gnK8fFLkDZ7WxOdehG7aeuQqY",
   authDomain: "proyecto-web-ii-22.firebaseapp.com",
   projectId: "proyecto-web-ii-22",

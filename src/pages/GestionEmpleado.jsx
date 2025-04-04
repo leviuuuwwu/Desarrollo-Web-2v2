@@ -9,13 +9,13 @@ import {
   doc,
   updateDoc,
   deleteDoc,
+  setDoc,
 } from "firebase/firestore";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { Link } from "react-router-dom";
 import Perfil from "../components/ModalPerfil";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-
 
 function GestionEmpleado() {
   const [trabajadores, setTrabajadores] = useState([]);
@@ -53,39 +53,37 @@ function GestionEmpleado() {
       fullName: Yup.string().required("Requerido"),
       email: Yup.string().email("Correo inválido").required("Requerido"),
       phone: Yup.string().required("Requerido"),
+      password: Yup.string().min(6, "Mínimo 6 caracteres").required("Requerido"),
     }),
     onSubmit: async (values) => {
       const empresaId = auth.currentUser?.uid;
       if (!empresaId) return;
-    
+  
       try {
-        // 1. Crear usuario en Authentication
-        const credenciales = await createUserWithEmailAndPassword(
-          auth,
-          values.email,
-          values.password
-        );
-    
-        // 2. Guardar datos en Firestore
-        await addDoc(collection(db, "users"), {
+        // Crea el usuario en Auth con su contraseña
+        const userCredential = await createUserWithEmailAndPassword(auth, values.email, values.password);
+        const nuevoUsuario = userCredential.user;
+  
+        // Crea el documento en Firestore con el mismo UID
+        await setDoc(doc(db, "users", nuevoUsuario.uid), {
           fullName: values.fullName,
           email: values.email,
           phone: values.phone,
-          rol: "trabajador",
+          role: "trabajador",
           idEmpresa: empresaId,
-          uid: credenciales.user.uid,
         });
-    
-        window.alert("Trabajador registrado con éxito.");
-        formik.resetForm();
+  
+        alert("Trabajador creado exitosamente.");
         setModalOpen(false);
+        formik.resetForm();
         obtenerTrabajadores();
+
+  
       } catch (error) {
-        console.error("Error al registrar trabajador:", error.message);
-        window.alert("Ocurrió un error al registrar al trabajador.");
+        console.error("Error al crear trabajador:", error);
       }
     },
-    });
+  });  
 
   const handleEditar = (trabajador) => {
     setEditandoId(trabajador.id);
@@ -118,13 +116,6 @@ function GestionEmpleado() {
   };
 
   const toggleModal = () => setModal(!modal);
-
-  const campos = [
-    { name: "fullName", label: "Nombre Completo" },
-    { name: "email", label: "Correo Electrónico" },
-    { name: "phone", label: "Teléfono" },
-    { name: "password", label: "Contraseña" },
-  ];
 
   return (
     <div className="bg-[#f5f5f5] min-h-screen">
@@ -229,22 +220,63 @@ function GestionEmpleado() {
           <div className="bg-white p-6 rounded shadow-lg w-96">
             <h2 className="text-center text-xl font-semibold text-[#1d3557] monse mb-3">Registrar Nuevo Trabajador</h2>
             <form onSubmit={formik.handleSubmit} className="space-y-3">
-              {campos.map(({ name, label }) => (
-                <div key={name}>
-                  <input
-                    type={name === "email" ? "email" : "text"}
-                    name={name}
-                    placeholder={label}
-                    value={formik.values[name]}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    className="w-full p-2 border border-gray-300 rounded-lg"
-                  />
-                  {formik.touched[name] && formik.errors[name] && (
-                    <p className="text-red-500 text-sm">{formik.errors[name]}</p>
-                  )}
-                </div>
-              ))}
+              <div>
+                <input
+                  type="text"
+                  name="fullName"
+                  placeholder="Nombre Completo"
+                  value={formik.values.fullName}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  className="w-full p-2 border border-gray-300 rounded-lg"
+                />
+                {formik.touched.fullName && formik.errors.fullName && (
+                  <p className="text-red-500 text-sm">{formik.errors.fullName}</p>
+                )}
+              </div>
+              <div>
+                <input
+                  type="email"
+                  name="email"
+                  placeholder="Correo electrónico"
+                  value={formik.values.email}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  className="w-full p-2 border border-gray-300 rounded-lg"
+                />
+                {formik.touched.email && formik.errors.email && (
+                  <p className="text-red-500 text-sm">{formik.errors.email}</p>
+                )}
+              </div>
+              <div>
+                <input
+                  type="text"
+                  name="phone"
+                  placeholder="Teléfono"
+                  value={formik.values.phone}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  className="w-full p-2 border border-gray-300 rounded-lg"
+                />
+                {formik.touched.phone && formik.errors.phone && (
+                  <p className="text-red-500 text-sm">{formik.errors.phone}</p>
+                )}
+              </div>
+              <div>
+                <input
+                  type="password"
+                  name="password"
+                  placeholder="Contraseña"
+                  value={formik.values.password}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  className="w-full p-2 border border-gray-300 rounded-lg"
+                />
+                {formik.touched.password && formik.errors.password && (
+                  <p className="text-red-500 text-sm">{formik.errors.password}</p>
+                )}
+              </div>
+
               <div className="flex items-center gap-2">
                 <button
                   type="button"
@@ -268,4 +300,4 @@ function GestionEmpleado() {
   );
 }
 
-export default GestionEmpleado;
+export default GestionEmpleado; 

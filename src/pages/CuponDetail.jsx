@@ -26,9 +26,20 @@ function CuponDetail() {
         const cuponDoc = await getDoc(doc(db, "cupones", id));
         if (cuponDoc.exists()) {
           const data = cuponDoc.data();
-          const fechaLimite = data.fechaLimiteUsar
-            ? new Date(data.fechaLimiteUsar.seconds * 1000).toLocaleDateString("es-ES")
-            : "No disponible";
+
+          let fechaLimite = "No disponible";
+          if (data.fechaLimiteUsar) {
+            const fecha = new Date(data.fechaLimiteUsar);
+            if (!isNaN(fecha)) {
+              fechaLimite = fecha.toLocaleDateString("es-ES", {
+                day: "2-digit",
+                month: "2-digit",
+                year: "numeric",
+              });
+            } else {
+              fechaLimite = data.fechaLimiteUsar; // ya es string válido
+            }
+          }
 
           setCupon({ id: cuponDoc.id, ...data, fechaLimiteUsar: fechaLimite });
         } else {
