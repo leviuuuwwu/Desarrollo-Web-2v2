@@ -36,15 +36,14 @@ function AdminDashboard() {
 
   return (
     <div>
-      {/* 🔹 NAVBAR ACTUALIZADO */}
       <header className="w-full bg-[#012E40] fixed py-4 px-20 flex items-center justify-between">
         <img src="/CM.png" alt="logo" className="w-60"/>
-        <div className="flex gap-5">
+        <div className="flex gap-7">
           <Link to="/ClientesDetail">
-            <i className="fa-solid fa-users text-white text-2xl hover:scale-125 transition cursor-pointer"></i>
+            <i className="fa-solid fa-users text-white text-3xl hover:scale-130 transition cursor-pointer"></i>
           </Link>
           <Link to="/EmpresaDetail">
-            <i className="fa-solid fa-building text-white text-2xl hover:scale-125 transition cursor-pointer"></i>
+            <i className="fa-solid fa-building text-white text-3xl hover:scale-130 transition cursor-pointer"></i>
           </Link>
           <Link to="/">
             <i className="fa-solid fa-arrow-right-from-bracket text-white text-3xl hover:scale-130 transition cursor-pointer"></i>
@@ -52,7 +51,7 @@ function AdminDashboard() {
         </div>
       </header>
 
-      {/* 🔹 SECCIÓN CUPONES */}
+      {/* cupones */}
       <section className="pt-24 px-28">
         <h1 className="text-2xl text-center monse font-semibold mb-3">Panel de Administración</h1>
 
